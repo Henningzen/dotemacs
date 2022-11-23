@@ -9,10 +9,13 @@
 (setq user-full-name "Henning Jansen"
       user-mail-address "henning.jansen@jansenh.no")
 
-;; Set path to dependencies -------------------------------------------
+;; Are we on a mac?
+(setq is-mac (equal system-type 'darwin))
+
 (setq warning-suppress-log-types '((package reinitialization)))
 (package-initialize)
 
+;; Set path to dependencies -------------------------------------------
 ;; Keep emacs Custom-settings in separate file
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
@@ -23,18 +26,13 @@
 (setq settings-dir
       (expand-file-name "settings" user-emacs-directory))
 
-;; Set up load path
-(add-to-list 'load-path settings-dir)
-(add-to-list 'load-path site-lisp-dir)
-;; --------------------------------------------------------------------
-
 ;; Add external projects to load path
 (dolist (project (directory-files site-lisp-dir t "\\w+"))
   (when (file-directory-p project)
     (add-to-list 'load-path project)))
 
 ;; Write backup files to own directory
-(setq backup-directory-alist
+(setq backup-directory
       `(("." . ,(expand-file-name
                  (concat user-emacs-directory "backups")))))
 
@@ -42,20 +40,28 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
+;; Set up load path
+(add-to-list 'load-path settings-dir)
+(add-to-list 'load-path site-lisp-dir)
+(add-to-list 'load-path backup-directory)
+(add-to-list 'load-path auto-save-file-name-transforms)
+
 ;; Don't write lock-files
 (setq create-lockfiles nil)
 
 ;; Make backups of files, even when they're in version control
 (setq vc-make-backup-files t)
-;; ---------------------------------------------------------------------
 
-;; Are we on a mac?
-(setq is-mac (equal system-type 'darwin))
+
 
 ;; Package Management --------------------------------------------------
 (unless (assoc-default "melpa" package-archives)
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
-(unless (assoc-default "nongnu" package-archives)
-  (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/") t))
 
+
+
+;; -----------------------------------------------------------------------------
+;; Load custom settings
+
+(require 'appearance)
 
