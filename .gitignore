@@ -11,6 +11,8 @@
 *.~undo-tree
 
 
+custom.el
 elpa/**
 backups/**
 auto-save-list/**
+transient/**
