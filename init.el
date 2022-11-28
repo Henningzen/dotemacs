@@ -15,18 +15,18 @@
 (setq warning-suppress-log-types '((package reinitialization)))
 (package-initialize)
 
-;; Set path to dependencies -------------------------------------------
+;; Set paths ------------------------------------------------------------------/
 
 (setq custom-file
       (expand-file-name "custom.el" user-emacs-directory))
-
 (load custom-file)
-
-(setq site-lisp-dir
-      (expand-file-name "site-lisp" user-emacs-directory))
 
 (setq settings-dir
       (expand-file-name "settings" user-emacs-directory))
+
+
+(setq site-lisp-dir
+      (expand-file-name "site-lisp" user-emacs-directory))
 
 ;; Add external projects to load path
 (dolist (project (directory-files site-lisp-dir t "\\w+"))
@@ -42,7 +42,7 @@
 (setq auto-save-file-name-transforms
       `((".*" ,temporary-file-directory t)))
 
-;; Set up load path
+;; Set up load paths
 (add-to-list 'load-path settings-dir)
 (add-to-list 'load-path site-lisp-dir)
 (add-to-list 'load-path backup-directory)
@@ -66,4 +66,27 @@
 ;; Load custom settings
 
 (require 'appearance)
+(require 'key-settings)
 
+
+
+;; -----------------------------------------------------------------------------
+
+                   ;; TODO: the dreaded commandp error
+
+;; Use M-w for copy-line if no active region
+;;(global-set-key (kbd "M-w") 'save-region-or-current-line)
+;; (global-set-key (kbd "s-w") 'save-region-or-current-line)
+;; (global-set-key (kbd "M-W") (lambda (save-region-or-current-line 1)))
+
+
+
+;; ;; Magit
+;; (global-set-key (kbd "C-x m") 'magit-status-fullscreen)
+;; (autoload 'magit-status-fullscreen "magit")
+
+;; ;; Duplicate region
+;; (global-set-key (kbd "C-c d") 'duplicate-current-line-or-region)
+
+;; ;; Browse the kill ring
+;; (global-set-key (kbd "C-x C-y") 'browse-kill-ring)
