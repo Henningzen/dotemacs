@@ -1,92 +1,110 @@
-;; Turn off mouse interface early in startup to avoid momentary display
-;; (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+;;; package --- init.el
+;;;
+;;; Commentary:
+;;;
+;;;   Henning Jansen 2025.
+;;;
+;;; Code:
+
+;; Menubar, toolbar and scrollbar
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-;; Mute splash-screen
-(setq inhibit-startup-message t)
+;; Remove security vulnerability
+(eval-after-load "enriched"
+  '(defun enriched-decode-display-prop (start end &optional param)
+     (list start end)))
 
-(setq user-full-name "Henning Jansen"
-      user-mail-address "henning.jansen@jansenh.no")
+;; Optional splashscreen
+(setq inhibit-startup-message 1)
 
-;; Are we on a mac?
-(setq is-mac (equal system-type 'darwin))
-
-(setq warning-suppress-log-types '((package reinitialization)))
-(package-initialize)
-
-;; Set paths ------------------------------------------------------------------/
-
-(setq custom-file
-      (expand-file-name "custom.el" user-emacs-directory))
+;; Keep emacs Custom-settings in separate file
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file)
 
+;; Set patch to settings
 (setq settings-dir
       (expand-file-name "settings" user-emacs-directory))
 
-
-(setq site-lisp-dir
-      (expand-file-name "site-lisp" user-emacs-directory))
-
-;; Add external projects to load path
-(dolist (project (directory-files site-lisp-dir t "\\w+"))
-  (when (file-directory-p project)
-    (add-to-list 'load-path project)))
+;; Set up load path
+(add-to-list 'load-path settings-dir)
 
 ;; Write backup files to own directory
-(setq backup-directory
+(setq backup-directory-alist
       `(("." . ,(expand-file-name
                  (concat user-emacs-directory "backups")))))
 
-;; Write all autosave files in the tmp dir
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
-
-;; Set up load paths
-(add-to-list 'load-path settings-dir)
-(add-to-list 'load-path site-lisp-dir)
-(add-to-list 'load-path backup-directory)
-(add-to-list 'load-path auto-save-file-name-transforms)
-
-;; Don't write lock-files
-(setq create-lockfiles nil)
-
-;; Make backups of files, even when they're in version control
-(setq vc-make-backup-files t)
+;; Save point position between sessions
+(require 'saveplace)
+(setq-default save-place t)
+(setq save-place-file (expand-file-name ".places" user-emacs-directory))
 
 
-
-;; Package Management --------------------------------------------------
-(unless (assoc-default "melpa" package-archives)
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
-
-
-
-;; -----------------------------------------------------------------------------
-;; Load custom settings
-
+;; Set up appearance early
 (require 'appearance)
-(require 'key-settings)
+
+;;; ----------------------------------------------------------------------------
+;;;   Install packages
+;;;
+(require 'setup-package)
+
+(defun init--install-packages ()
+  (packages-install
+   '(
+     browse-kill-ring
+     cider
+     clojure-mode
+     consult
+     dash
+     diff-hl
+     diminish
+     find-file-in-project
+     forge
+     magit
+     marginalia
+     markdown-mode
+     lsp-mode
+     lsp-ui
+     orderless
+     paredit
+     perspective
+     rainbow-delimiters
+     undo-tree
+     vertico
+     )))
+
+(condition-case nil
+    (init--install-packages)
+  (error
+   (package-refresh-contents)
+   (init--install-packages)))
+
+;; Local functions (load all files in defuns-dir)
+(setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
+(dolist (file (directory-files defuns-dir t "\\w+"))
+  (when (file-regular-p file)
+    (load file)))
 
 
+;;; ----------------------------------------------------------------------------
+;;;   Setup packages
+;;;
+;;;
+;; Setup extensions
+;;(eval-after-load 'org '(require 'setup-org))
+(eval-after-load 'magit '(require 'setup-magit))
 
-;; -----------------------------------------------------------------------------
+(require 'setup-vertico)
+(require 'setup-orderless)
+(require 'setup-marginalia)
+(require 'setup-consult)
+(require 'setup-perspective)
+(require 'setup-lsp)
+(require 'setup-paredit)
+(require 'setup-defaults)
+(require 'key-bindings)
+;;(require 'mode-mappings) ;; TODO
 
-                   ;; TODO: the dreaded commandp error
-
-;; Use M-w for copy-line if no active region
-;;(global-set-key (kbd "M-w") 'save-region-or-current-line)
-;; (global-set-key (kbd "s-w") 'save-region-or-current-line)
-;; (global-set-key (kbd "M-W") (lambda (save-region-or-current-line 1)))
-
-
-
-;; ;; Magit
-;; (global-set-key (kbd "C-x m") 'magit-status-fullscreen)
-;; (autoload 'magit-status-fullscreen "magit")
-
-;; ;; Duplicate region
-;; (global-set-key (kbd "C-c d") 'duplicate-current-line-or-region)
-
-;; ;; Browse the kill ring
-;; (global-set-key (kbd "C-x C-y") 'browse-kill-ring)
+(provide 'init)
+;;; init.el ends here

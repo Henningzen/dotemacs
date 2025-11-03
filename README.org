@@ -1,9 +1,147 @@
-#+title: README
-#+author: Henning Jansen
-#+date: 1996-04-23
+#+TITLE: .emacs.d - Personal Emacs Configuration
+#+AUTHOR: Henning Jansen
+#+EMAIL: henning.jansen@jansenh.no
+#+DATE: 2025-05-24
+#+DESCRIPTION: Personal Emacs configuration settings, updated for 2025
+#+KEYWORDS: emacs, configuration
+#+LANGUAGE: en
+#+STARTUP: overview
+#+STARTUP: hidestars
+#+OPTIONS: toc:2 num:nil
+#+PROPERTY: header-args :eval never-export
+#+CATEGORY: configuration
+#+FILETAGS: :emacs:config:dotfiles:
 
-* README
+* Introduction
 
-** Resources
-[[https://sachachua.com/dotemacs/index.html][Sacha Chua on Emacs.]]
+My Emacs settings - updated November 2025
+
+* Packages
++ dash (Proper list API for Emacs Lisp, Magnar Sveen)
+
+** clojure-lsp
+Installed with script in /usr/local/bin,
+https://emacs-lsp.github.io/lsp-mode/tutorials/clojure-guide/  (Eric Dallo)
+
+Why this approach differs from the official guide:
+✅ What I kept:
+Performance tuning (gc-cons-threshold, read-process-output-max)
+Hooks for clojure-mode, clojurescript-mode, clojurec-mode
+LSP as the intelligence layer
+❌ What I changed/removed:
+Removed company - You don't need it:
+
+LSP provides completion via completion-at-point
+Works with your existing Vertico/Orderless stack
+Simpler, fewer moving parts
+Removed flycheck - LSP has built-in diagnostics:
+
+lsp-mode shows errors/warnings automatically
+No need for separate checker
+Removed lsp-treemacs - Not essential:
+
+Adds dependency on treemacs
+You have consult-imenu for navigation
+Can add later if you want tree views
+
+What you get:
+✅ Jump to definition - M-. (lsp-ui-peek)
+✅ Find references - M-?
+✅ Completion - Works with TAB/completion-at-point
+✅ Rename - C-c l r
+✅ Code actions - C-c l a
+✅ Hover documentation - Automatic in minibuffer
+✅ Diagnostics - Errors/warnings inline
+✅ Works with CIDER - They complement each other
+✅ Paredit preserved - Structural editing untouched
+
+
+clojure-lsp    → Static analysis, navigation, refactoring
+CIDER          → REPL, evaluation, debugging
+paredit        → Structural editing
+completion     → Built-in completion-at-point (via LSP)
+
+
+** clojure-mode issue
+I had problems with finding clojure-mode with 'M-x package-install'. Got it
+via 'M-x list-packages'
+
+#+begin_src text
+
+  Package clojure-mode is installed.
+
+       Status: Installed in ‘clojure-mode-20250527.840/’ (unsigned). Delete
+      Version: 20250527.840
+       Commit: d336db623e7ae8cffff50aaaea3f1b05cc4ccecb
+      Summary: Major mode for Clojure code.
+     Requires: emacs-25.1
+      Website: https://github.com/clojure-emacs/clojure-mode
+     Keywords: languages clojure clojurescript lisp 
+  Other versions: 20250527.840 (melpa), 5.20.0 (melpa-stable).
+
+#+end_src
+
+
+*
+
+* Using Emacs
+** General
+| Key     | Description |
+|---------+-------------|
+| ~C-x u~ | Undo tree   |
+
+** Files
+| Key       | Description                                  |
+|-----------+----------------------------------------------|
+| ~C-x C-f~ | Open a file. Starts in the current directory |
+|           |                                              |
+
+** Hippie-expand basics
+Usage patterns:
+M-/ - Smart expansion with all strategies
+C-M-/ - Expand full lines only (great for repeating similar code)
+C-c / - Case-sensitive expansion
+C-c M-/ - Words/symbols only (no file paths or lines)
+C-c C-/ - Current buffer only (faster, less noise)
+C-c f / - File name completion only
+** Paredit
+Paredit operations are semantic:
+
+C-→ = slurp (expand form)
+C-← = barf (contract form)
+M-s = splice (unwrap)
+M-( = wrap
+C-M-f/b = navigate by form
+
+
+Navigation:
+C-M-f / C-M-b    Forward/backward by expression
+C-M-u / C-M-d    Up/down in tree
+
+Slurping/Barfing (most important!):
+C-→ / C-<right>  Slurp right (pull into form)
+C-← / C-<left>   Barf right (push out of form)
+C-M-← / C-M-→    Slurp/barf left
+
+Wrapping:
+M-(              Wrap with ()
+M-s              Splice (remove wrapping)
+M-S (shift-s)    Split expression
+M-J              Join expressions
+
+Killing:
+C-k              Kill to end of form (structurally safe)
+M-k              Kill whole form
+C-M-k            Kill forward expression
+
+** Consult
+C-x b → consult-buffer - Beautiful buffer switching with groups (files, buffers, bookmarks)
+M-s l → consult-line - Jump to any line in current buffer
+M-g g → consult-goto-line - Better goto-line with preview
+M-g i → consult-imenu - Navigate code structure (great for Clojure!)
+
+** continue
+
+
+
 

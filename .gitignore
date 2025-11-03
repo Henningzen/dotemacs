@@ -16,3 +16,10 @@ elpa/**
 backups/**
 auto-save-list/**
 transient/**
+places
+recentf
+perspectives
+history
+forge-database.sqlite
+eln-cache/**
+.lsp-session-*
