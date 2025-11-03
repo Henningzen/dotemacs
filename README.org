@@ -16,53 +16,51 @@
 
 My Emacs settings - updated November 2025
 
+General characteristics:
+   + clojure-lsp    → Static analysis, navigation, refactoring
+   + CIDER          → REPL, evaluation, debugging
+   + paredit        → Structural editing
+   + completion     → Built-in completion-at-point (via LSP)
+
+     
 * Packages
-+ dash (Proper list API for Emacs Lisp, Magnar Sveen)
+** dash
+   Proper list API for Emacs Lisp, Magnar Sveen)
 
 ** clojure-lsp
-Installed with script in /usr/local/bin,
-https://emacs-lsp.github.io/lsp-mode/tutorials/clojure-guide/  (Eric Dallo)
+   Installed with script in /usr/local/bin,
+   https://emacs-lsp.github.io/lsp-mode/tutorials/clojure-guide/  (Eric Dallo)
 
-Why this approach differs from the official guide:
-✅ What I kept:
-Performance tuning (gc-cons-threshold, read-process-output-max)
-Hooks for clojure-mode, clojurescript-mode, clojurec-mode
-LSP as the intelligence layer
-❌ What I changed/removed:
-Removed company - You don't need it:
+   Official guide, but with tweaks:
+   ✅ What we kept:
+   + Performance tuning (gc-cons-threshold, read-process-output-max)
+   + Hooks for clojure-mode, clojurescript-mode, clojurec-mode
+   + LSP as the intelligence layer
+     
+   ❌ What we changed or removed:
+   + company-mode (for now)
+   + LSP provides completion via completion-at-point
+   + Works with our existing Vertico/Orderless stack
+   + Simpler, fewer moving parts
+   + Removed flycheck - LSP has built-in diagnostics.
+     
+   Characteristics (observed so far):
+   + lsp-mode shows errors/warnings automatically
+   + No need for separate checker
+   + Removed lsp-treemacs
 
-LSP provides completion via completion-at-point
-Works with your existing Vertico/Orderless stack
-Simpler, fewer moving parts
-Removed flycheck - LSP has built-in diagnostics:
+   Usage (so far):
+   ✅ Jump to definition - M-. (lsp-ui-peek)
+   ✅ Find references - M-?
+   ✅ Completion - Works with TAB/completion-at-point
+   ✅ Rename - C-c l r
+   ✅ Code actions - C-c l a
+   ✅ Hover documentation - Automatic in minibuffer
+   ✅ Diagnostics - Errors/warnings inline
+   ✅ Compliant with Cider
+   ✅ Paredit and structural editing untouched
 
-lsp-mode shows errors/warnings automatically
-No need for separate checker
-Removed lsp-treemacs - Not essential:
-
-Adds dependency on treemacs
-You have consult-imenu for navigation
-Can add later if you want tree views
-
-What you get:
-✅ Jump to definition - M-. (lsp-ui-peek)
-✅ Find references - M-?
-✅ Completion - Works with TAB/completion-at-point
-✅ Rename - C-c l r
-✅ Code actions - C-c l a
-✅ Hover documentation - Automatic in minibuffer
-✅ Diagnostics - Errors/warnings inline
-✅ Works with CIDER - They complement each other
-✅ Paredit preserved - Structural editing untouched
-
-
-clojure-lsp    → Static analysis, navigation, refactoring
-CIDER          → REPL, evaluation, debugging
-paredit        → Structural editing
-completion     → Built-in completion-at-point (via LSP)
-
-
-** clojure-mode issue
+** clojure-mode (issue)
 I had problems with finding clojure-mode with 'M-x package-install'. Got it
 via 'M-x list-packages'
 
