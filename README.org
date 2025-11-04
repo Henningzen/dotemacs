@@ -22,7 +22,7 @@ General characteristics:
    + paredit        → Structural editing
    + completion     → Built-in completion-at-point (via LSP)
 
-     
+
 * Packages
 ** dash
    Proper list API for Emacs Lisp, Magnar Sveen)
@@ -139,6 +139,11 @@ M-g g → consult-goto-line - Better goto-line with preview
 M-g i → consult-imenu - Navigate code structure (great for Clojure!)
 
 ** continue
+
+* Development
+
+** TODO stuff
+*** TODO Fix magit quit key (see note in 'setup-magit')
 
 
 
