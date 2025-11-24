@@ -9,6 +9,7 @@
 (require 'perspective)
 
 (global-set-key (kbd "C-x C-b") 'persp-list-buffers)
+(global-set-key (kbd "C-x b") 'persp-switch-to-buffer*)
 (customize-set-variable 'persp-mode-prefix-key (kbd "C-x x"))
 
 ;; Enable perspective mode

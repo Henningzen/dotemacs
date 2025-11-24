@@ -7,59 +7,35 @@
 
 (require 'use-package)
 
-(use-package vertico
-  :custom
-  ((vertico-scroll-margin 0) ;; Different scroll margin
-  (vertico-count 20) ;; Show more candidates
-  (vertico-resize t) ;; Grow and shrink the Vertico minibuffer
-  (vertico-cycle t)) ;; Enable cycling for `vertico-next/previous'
-  :init
-  (vertico-mode)
+;; Enable vertico
+(vertico-mode 1)
 
-  (setq minibuffer-prompt-properties
-        '(read-only t cursor-intangible t face minibuffer-prompt))
-  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+;; Configure vertico
+(setq vertico-cycle t)                ; Cycle through candidates
+(setq vertico-resize nil)             ; Don't resize vertico window
+(setq vertico-count 20)               ; Show 20 candidates
 
-  (setq read-extended-command-predicate
-        #'command-completion-default-include-p)
+;; Use `consult-completion-in-region' for completion-at-point
+(setq completion-in-region-function
+      (lambda (&rest args)
+        (apply (if vertico-mode
+                   #'consult-completion-in-region
+                 #'completion--in-region)
+               args)))
 
-  (setq enable-recursive-minibuffers t)
+;; Emacs 28+: Hide commands in M-x which don't work in current mode
+(setq read-extended-command-predicate
+      #'command-completion-default-include-p)
 
-  (require 'vertico-directory)
-  (keymap-set vertico-map "RET" #'vertico-directory-enter)
-  (keymap-set vertico-map "DEL" #'vertico-directory-delete-char)
-  (keymap-set vertico-map "M-DEL" #'vertico-directory-delete-word)
-  (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
+;; Enable recursive minibuffers
+(setq enable-recursive-minibuffers t)
 
-  ;; Use `consult-completion-in-region' if Vertico is enabled.
-  ;; Otherwise use the default `completion--in-region' function.
-  (setq completion-in-region-function
-        (lambda (&rest args)
-          (apply (if vertico-mode
-                     #'consult-completion-in-region
-                   #'completion--in-region)
-                 args))))
-
-;; Persist history over Emacs restarts. Vertico sorts by history position.
-(use-package savehist
-  :init
-  (savehist-mode))
-
-;; Emacs minibuffer configurations.
-(use-package emacs
-  :custom
-  ;; Enable context menu. `vertico-multiform-mode' adds a menu in the minibuffer
-  ;; to switch display modes.
-  (context-menu-mode t)
-  ;; Support opening new minibuffers from inside existing minibuffers.
-  (enable-recursive-minibuffers t)
-  ;; Hide commands in M-x which do not work in the current mode.  Vertico
-  ;; commands are hidden in normal buffers. This setting is useful beyond
-  ;; Vertico.
-  (read-extended-command-predicate #'command-completion-default-include-p)
-  ;; Do not allow the cursor in the minibuffer prompt
-  (minibuffer-prompt-properties
-   '(read-only t cursor-intangible t face minibuffer-prompt)))
+;; Keybindings for vertico
+(define-key vertico-map (kbd "C-j") #'vertico-next)
+(define-key vertico-map (kbd "C-k") #'vertico-previous)
+(define-key vertico-map (kbd "C-f") #'vertico-exit)
+(define-key vertico-map (kbd "M-RET") #'vertico-exit-input)
 
 (provide 'setup-vertico)
 ;;; setup-vertico.el ends here
+
