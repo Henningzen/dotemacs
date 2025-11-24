@@ -100,6 +100,7 @@
 (require 'setup-orderless)
 (require 'setup-marginalia)
 (require 'setup-consult)
+(require 'setup-magit)
 (require 'setup-perspective)
 (require 'setup-lsp)
 (require 'setup-paredit)

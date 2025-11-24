@@ -22,7 +22,7 @@ General characteristics:
    + paredit        → Structural editing
    + completion     → Built-in completion-at-point (via LSP)
 
-     
+
 * Packages
 ** dash
    Proper list API for Emacs Lisp, Magnar Sveen)
@@ -32,6 +32,7 @@ General characteristics:
    https://emacs-lsp.github.io/lsp-mode/tutorials/clojure-guide/  (Eric Dallo)
 
    Official guide, but with tweaks:
+
    ✅ What we kept:
    + Performance tuning (gc-cons-threshold, read-process-output-max)
    + Hooks for clojure-mode, clojurescript-mode, clojurec-mode
@@ -50,19 +51,19 @@ General characteristics:
    + Removed lsp-treemacs
 
    Usage (so far):
-   ✅ Jump to definition - M-. (lsp-ui-peek)
-   ✅ Find references - M-?
-   ✅ Completion - Works with TAB/completion-at-point
-   ✅ Rename - C-c l r
-   ✅ Code actions - C-c l a
-   ✅ Hover documentation - Automatic in minibuffer
-   ✅ Diagnostics - Errors/warnings inline
-   ✅ Compliant with Cider
-   ✅ Paredit and structural editing untouched
+   + Jump to definition - M-. (lsp-ui-peek)
+   + Find references - M-?
+   + Completion - Works with TAB/completion-at-point
+   + Rename - C-c l r
+   + Code actions - C-c l a
+   + Hover documentation - Automatic in minibuffer
+   + Diagnostics - Errors/warnings inline
+   + Compliant with Cider
+   + Paredit and structural editing untouched
 
 ** clojure-mode (issue)
-I had problems with finding clojure-mode with 'M-x package-install'. Got it
-via 'M-x list-packages'
+   I had problems with finding clojure-mode with 'M-x package-install'. Got it
+   installed via 'M-x list-packages'
 
 #+begin_src text
 
@@ -80,8 +81,6 @@ via 'M-x list-packages'
 #+end_src
 
 
-*
-
 * Using Emacs
 ** General
 | Key     | Description |
@@ -95,13 +94,14 @@ via 'M-x list-packages'
 |           |                                              |
 
 ** Hippie-expand basics
-Usage patterns:
-M-/ - Smart expansion with all strategies
-C-M-/ - Expand full lines only (great for repeating similar code)
-C-c / - Case-sensitive expansion
-C-c M-/ - Words/symbols only (no file paths or lines)
-C-c C-/ - Current buffer only (faster, less noise)
-C-c f / - File name completion only
+   Usage patterns:
+| ~M-/~     | Smart expansion with all strategies                       |
+| ~C-M-/~   | Expand full lines only (great for repeating similar code) |
+| ~C-c /~   | Case-sensitive expansion                                  |
+| ~C-c M-/~ | Words/symbols only (no file paths or lines)               |
+| ~C-c C-/~ | Current buffer only (faster, less noise)                  |
+| ~C-c f /~ | File name completion only                                 |
+
 ** Paredit
 Paredit operations are semantic:
 
@@ -139,6 +139,11 @@ M-g g → consult-goto-line - Better goto-line with preview
 M-g i → consult-imenu - Navigate code structure (great for Clojure!)
 
 ** continue
+
+* Development
+
+** TODO stuff
+*** TODO Fix magit quit key (see note in 'setup-magit')
 
 
 

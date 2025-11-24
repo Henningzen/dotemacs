@@ -43,7 +43,7 @@ configuration stored by magit-status-fullscreen"
         (unpulled . show)
         (stashes . show)))
 
-(define-key magit-status-mode-map (kbd "q") 'magit-quit)
+;; (define-key magit-status-mode-map (kbd "q") 'magit-quit) ;; TODO
 
 (set-default 'magit-log-margin '(t "%Y-%m-%d %H:%M " magit-log-margin-width t 18))
 
