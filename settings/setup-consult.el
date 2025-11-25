@@ -7,40 +7,40 @@
 ;;;
 ;;;   Henning Jansen 2025.
 ;;;
-;;; Code:
 
-(use-package consult
-  :ensure t
-  :bind (;; Buffer switching
-         ("C-x b" . consult-buffer)
-         ("C-x 4 b" . consult-buffer-other-window)
-         ("C-x 5 b" . consult-buffer-other-frame)
-         ("C-x p b" . consult-project-buffer)
-         
-         ;; Navigation
-         ("M-g g" . consult-goto-line)
-         ("M-g M-g" . consult-goto-line)
-         ("M-g i" . consult-imenu)
-         ("M-g I" . consult-imenu-multi)
-         
-         ;; Search
-         ("M-s l" . consult-line)
-         ("M-s L" . consult-line-multi)
-         ("M-s r" . consult-ripgrep)
-         ("M-s f" . consult-find)
-         
-         ;; Misc
-         ("M-y" . consult-yank-pop))
-  
-  :config
-  ;; Narrow results with <
-  (setq consult-narrow-key "<")
-  
-  ;; Preview settings
-  (setq consult-preview-key 'any)
-  
-  ;; For projectile/project.el integration
-  (setq consult-project-function #'consult--default-project-function))
+(require 'consult)
+
+;; Create a perspective-aware buffer source
+(defvar consult--source-perspective-buffer
+  `(:name     "Perspective Buffer"
+    :narrow   ?b
+    :category buffer
+    :face     consult-buffer
+    :history  buffer-name-history
+    :state    ,#'consult--buffer-state
+    :default  t
+    :items
+    ,(lambda ()
+       (consult--buffer-query
+        :predicate (lambda (buf)
+                     (persp-is-current-buffer buf))
+        :sort 'visibility
+        :as #'buffer-name)))
+  "Perspective buffer candidate source for `consult-buffer'.")
+
+;; Hide the default buffer source and add our perspective one
+(setq consult-buffer-sources
+      '(consult--source-perspective-buffer
+        consult--source-file-register
+        consult--source-bookmark
+        consult--source-project-buffer-hidden
+        consult--source-project-recent-file-hidden))
+
+;; Keybindings
+(global-set-key (kbd "C-x b") 'consult-buffer)
+(global-set-key (kbd "M-s l") 'consult-line)
+(global-set-key (kbd "M-g g") 'consult-goto-line)
+(global-set-key (kbd "M-g i") 'consult-imenu)
 
 (provide 'setup-consult)
 ;;; setup-consult.el ends here

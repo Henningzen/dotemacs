@@ -133,10 +133,14 @@ M-k              Kill whole form
 C-M-k            Kill forward expression
 
 ** Consult
-C-x b → consult-buffer - Beautiful buffer switching with groups (files, buffers, bookmarks)
-M-s l → consult-line - Jump to any line in current buffer
-M-g g → consult-goto-line - Better goto-line with preview
-M-g i → consult-imenu - Navigate code structure (great for Clojure!)
+
+| Key     | Description                                                                            |
+|---------+----------------------------------------------------------------------------------------|
+| ~C-x b~ | consult-buffer    - Beautiful buffer switching with groups (files, buffers, bookmarks) |
+| ~M-s l~ | consult-line      - Jump to any line in current buffer                                 |
+| ~M-g g~ | consult-goto-line - Better goto-line with preview                                      |
+| ~M-g i~ | consult-imenu     - Navigate code structure (great for Clojure!)                       |
+
 
 ** continue
 
