@@ -20,6 +20,7 @@ places
 recentf
 perspectives
 history
+tramp
 forge-database.sqlite
 eln-cache/**
 .lsp-session-*
