@@ -14,15 +14,22 @@
 
 * Introduction
 
-My Emacs settings - updated November 2025
+#+begin_quote
+  My Emacs settings - updated for 2026
+#+end_quote
 
 General characteristics:
-   + clojure-lsp    → Static analysis, navigation, refactoring
-   + CIDER          → REPL, evaluation, debugging
-   + paredit        → Structural editing
-   + completion     → Built-in completion-at-point (via LSP)
+  + Vertico        → Vertical completion interface
+  + Consult        → Smart buffer/file/line commands
+  + Orderless      → Space-separated fuzzy matching
+  + Marginalia     → Minibuffer annotations
+  + Perspective    → Per-project buffer isolation
+  + Clojure-lsp    → Static analysis, navigation, refactoring
+  + Cider          → REPL, evaluation, debugging
+  + Paredit        → Structural editing
+  + completion     → completion-at-point (LSP) + Hippie Expand
 
-
+    
 * Packages
 ** dash
    Proper list API for Emacs Lisp, Magnar Sveen)
@@ -33,12 +40,12 @@ General characteristics:
 
    Official guide, but with tweaks:
 
-   ✅ What we kept:
+   What I kept:
    + Performance tuning (gc-cons-threshold, read-process-output-max)
    + Hooks for clojure-mode, clojurescript-mode, clojurec-mode
    + LSP as the intelligence layer
      
-   ❌ What we changed or removed:
+   What I have changed or removed:
    + company-mode (for now)
    + LSP provides completion via completion-at-point
    + Works with our existing Vertico/Orderless stack
@@ -61,37 +68,16 @@ General characteristics:
    + Compliant with Cider
    + Paredit and structural editing untouched
 
-** clojure-mode (issue)
-   I had problems with finding clojure-mode with 'M-x package-install'. Got it
-   installed via 'M-x list-packages'
-
-#+begin_src text
-
-  Package clojure-mode is installed.
-
-       Status: Installed in ‘clojure-mode-20250527.840/’ (unsigned). Delete
-      Version: 20250527.840
-       Commit: d336db623e7ae8cffff50aaaea3f1b05cc4ccecb
-      Summary: Major mode for Clojure code.
-     Requires: emacs-25.1
-      Website: https://github.com/clojure-emacs/clojure-mode
-     Keywords: languages clojure clojurescript lisp 
-  Other versions: 20250527.840 (melpa), 5.20.0 (melpa-stable).
-
-#+end_src
-
 
 * Using Emacs
 ** General
-| Key     | Description |
-|---------+-------------|
-| ~C-x u~ | Undo tree   |
-
-** Files
 | Key       | Description                                  |
 |-----------+----------------------------------------------|
+| ~C-x u~   | Undo tree                                    |
+| ~C-k~     | Kill to end of form (structurally safe)      |
+| ~M-k~     | Kill whole form                              |
+| ~C-M-k~   | Kill forward expression                      |
 | ~C-x C-f~ | Open a file. Starts in the current directory |
-|           |                                              |
 
 ** Hippie-expand basics
    Usage patterns:
@@ -103,52 +89,43 @@ General characteristics:
 | ~C-c f /~ | File name completion only                                 |
 
 ** Paredit
-Paredit operations are semantic:
+   Paredit operations are semantic:
+| Key       | Description          |
+|-----------+----------------------|
+| ~C-→~     | slurp (expand form)  |
+| ~C-←~     | barf (contract form) |
+| ~M-s~     | splice (unwrap)      |
+| ~M-(~     | wrap                 |
+| ~C-M-f/b~ | navigate by form     |
 
-C-→ = slurp (expand form)
-C-← = barf (contract form)
-M-s = splice (unwrap)
-M-( = wrap
-C-M-f/b = navigate by form
 
+** Navigation:
+| Key         | Description                   |
+|-------------+-------------------------------|
+| ~C-M-f~     | Forward by expression         |
+| ~C-M-b~     | Backward by expression        |
+| ~C-M-u~     | Up in tree                    |
+| ~C-M-d~     | Down in tree                  |
+| ~C-→~       | Slurp right (pull into form)  |
+| ~C-<right>~ | Slurp right (pull into form)  |
+| ~C-←~       | Barf right (push out of form) |
+| ~C-<left>~  | Barf right (push out of form) |
+| ~C-M-←~     | Slurp left                    |
+| ~C-M-→~     | Barf left                     |
 
-Navigation:
-C-M-f / C-M-b    Forward/backward by expression
-C-M-u / C-M-d    Up/down in tree
-
-Slurping/Barfing (most important!):
-C-→ / C-<right>  Slurp right (pull into form)
-C-← / C-<left>   Barf right (push out of form)
-C-M-← / C-M-→    Slurp/barf left
-
-Wrapping:
-M-(              Wrap with ()
-M-s              Splice (remove wrapping)
-M-S (shift-s)    Split expression
-M-J              Join expressions
-
-Killing:
-C-k              Kill to end of form (structurally safe)
-M-k              Kill whole form
-C-M-k            Kill forward expression
+** Wrapping:
+| Key               | Description              |
+|-------------------+--------------------------|
+| ~M-(~             | Wrap with ()             |
+| ~M-s~             | Splice (remove wrapping) |
+| ~M-S (shift-s)~   | Split expression         |
+| ~M-J~             | Join expressions         |
 
 ** Consult
-
-| Key     | Description                                                                            |
-|---------+----------------------------------------------------------------------------------------|
-| ~C-x b~ | consult-buffer    - Beautiful buffer switching with groups (files, buffers, bookmarks) |
-| ~M-s l~ | consult-line      - Jump to any line in current buffer                                 |
-| ~M-g g~ | consult-goto-line - Better goto-line with preview                                      |
-| ~M-g i~ | consult-imenu     - Navigate code structure (great for Clojure!)                       |
-
-
-** continue
-
-* Development
-
-** TODO stuff
-*** TODO Fix magit quit key (see note in 'setup-magit')
-
-
-
+| Key     | Description                                                                  |
+|---------+------------------------------------------------------------------------------|
+| ~C-x b~ | consult-buffer    - Buffer switching with groups (files, buffers, bookmarks) |
+| ~M-s l~ | consult-line      - Jump to any line in current buffer                       |
+| ~M-g g~ | consult-goto-line - Better goto-line with preview                            |
+| ~M-g i~ | consult-imenu     - Navigate code structure (great for Clojure!)             |
 
