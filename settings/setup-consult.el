@@ -10,12 +10,7 @@
 
 (require 'consult)
 
-;; Configure consult preview
-(setq consult-preview-key 'any)
-
-;; Integrate with perspective - filter buffers by perspective
-(consult-customize consult--source-buffer :hidden t :default nil)
-
+;; Create a perspective-aware buffer source
 (defvar consult--source-perspective-buffer
   `(:name     "Perspective Buffer"
     :narrow   ?b
@@ -33,18 +28,19 @@
         :as #'buffer-name)))
   "Perspective buffer candidate source for `consult-buffer'.")
 
-(add-to-list 'consult-buffer-sources 'consult--source-perspective-buffer 'append)
+;; Hide the default buffer source and add our perspective one
+(setq consult-buffer-sources
+      '(consult--source-perspective-buffer
+        consult--source-file-register
+        consult--source-bookmark
+        consult--source-project-buffer-hidden
+        consult--source-project-recent-file-hidden))
 
-;; Global keybindings
+;; Keybindings
 (global-set-key (kbd "C-x b") 'consult-buffer)
-(global-set-key (kbd "C-c b") 'consult-buffer)
-(global-set-key (kbd "M-g i") 'consult-imenu)
-(global-set-key (kbd "M-g I") 'consult-imenu-multi)
 (global-set-key (kbd "M-s l") 'consult-line)
-(global-set-key (kbd "M-s L") 'consult-line-multi)
-(global-set-key (kbd "M-s g") 'consult-grep)
-(global-set-key (kbd "M-s G") 'consult-git-grep)
-(global-set-key (kbd "M-s r") 'consult-ripgrep)
+(global-set-key (kbd "M-g g") 'consult-goto-line)
+(global-set-key (kbd "M-g i") 'consult-imenu)
 
 (provide 'setup-consult)
 ;;; setup-consult.el ends here

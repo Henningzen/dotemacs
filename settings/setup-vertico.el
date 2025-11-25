@@ -5,17 +5,37 @@
 ;;;
 ;;; Code:
 
-(require 'use-package)
+(require 'vertico)
+
+;; Configure vertico
+(setq vertico-scroll-margin 0)
+(setq vertico-count 20)
+(setq vertico-resize t)
+(setq vertico-cycle t)
 
 ;; Enable vertico
 (vertico-mode 1)
 
-;; Configure vertico
-(setq vertico-cycle t)                ; Cycle through candidates
-(setq vertico-resize nil)             ; Don't resize vertico window
-(setq vertico-count 20)               ; Show 20 candidates
+;; Minibuffer settings
+(setq minibuffer-prompt-properties
+      '(read-only t cursor-intangible t face minibuffer-prompt))
+(add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
 
-;; Use `consult-completion-in-region' for completion-at-point
+;; Hide commands in M-x which don't work in current mode
+(setq read-extended-command-predicate
+      #'command-completion-default-include-p)
+
+;; Enable recursive minibuffers
+(setq enable-recursive-minibuffers t)
+
+;; Vertico directory navigation - THIS IS THE KEY PART!
+(require 'vertico-directory)
+(keymap-set vertico-map "RET" #'vertico-directory-enter)
+(keymap-set vertico-map "DEL" #'vertico-directory-delete-char)
+(keymap-set vertico-map "M-DEL" #'vertico-directory-delete-word)
+(add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
+
+;; Use consult-completion-in-region if Vertico is enabled
 (setq completion-in-region-function
       (lambda (&rest args)
         (apply (if vertico-mode
@@ -23,19 +43,9 @@
                  #'completion--in-region)
                args)))
 
-;; Emacs 28+: Hide commands in M-x which don't work in current mode
-(setq read-extended-command-predicate
-      #'command-completion-default-include-p)
-
-;; Enable recursive minibuffers
-(setq enable-recursive-minibuffers t)
-
-;; Keybindings for vertico
-(define-key vertico-map (kbd "C-j") #'vertico-next)
-(define-key vertico-map (kbd "C-k") #'vertico-previous)
-(define-key vertico-map (kbd "C-f") #'vertico-exit)
-(define-key vertico-map (kbd "M-RET") #'vertico-exit-input)
+;; Persist history over Emacs restarts
+(require 'savehist)
+(savehist-mode 1)
 
 (provide 'setup-vertico)
 ;;; setup-vertico.el ends here
-
