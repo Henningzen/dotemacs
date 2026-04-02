@@ -68,6 +68,15 @@ General characteristics:
    + Compliant with Cider
    + Paredit and structural editing untouched
 
+** gptel
+   Directive and instructions are set in 'settings/setup-gptel.el'
+   
+| command                    | Description                          |
+|----------------------------+--------------------------------------|
+| ~M-x gptel-switch-profile~ | Directive + backend + model together |
+| ~M-x gptel-set-directives~ | Directive only                       |
+| ~M-x gptel-switch-backend~ | Backend/model only                   |
+
 
 * Using Emacs
 ** General
@@ -97,7 +106,6 @@ General characteristics:
 | ~M-s~     | splice (unwrap)      |
 | ~M-(~     | wrap                 |
 | ~C-M-f/b~ | navigate by form     |
-
 
 ** Navigation:
 | Key         | Description                   |

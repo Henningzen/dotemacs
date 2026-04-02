@@ -60,6 +60,7 @@
      diff-hl
      diminish
      find-file-in-project
+     gptel
      forge
      magit
      marginalia
@@ -106,6 +107,7 @@
 (require 'setup-paredit)
 (require 'setup-defaults)
 (require 'key-bindings)
+(require 'setup-gptel)
 ;;(require 'mode-mappings) ;; TODO
 
 (provide 'init)
