@@ -29,7 +29,7 @@ General characteristics:
   + Paredit        → Structural editing
   + completion     → completion-at-point (LSP) + Hippie Expand
 
-    
+
 * Packages
 ** dash
    Proper list API for Emacs Lisp, Magnar Sveen)
@@ -44,14 +44,14 @@ General characteristics:
    + Performance tuning (gc-cons-threshold, read-process-output-max)
    + Hooks for clojure-mode, clojurescript-mode, clojurec-mode
    + LSP as the intelligence layer
-     
+
    What I have changed or removed:
    + company-mode (for now)
    + LSP provides completion via completion-at-point
    + Works with our existing Vertico/Orderless stack
    + Simpler, fewer moving parts
    + Removed flycheck - LSP has built-in diagnostics.
-     
+
    Characteristics (observed so far):
    + lsp-mode shows errors/warnings automatically
    + No need for separate checker
@@ -70,7 +70,7 @@ General characteristics:
 
 ** gptel
    Directive and instructions are set in 'settings/setup-gptel.el'
-   
+
 | command                    | Description                          |
 |----------------------------+--------------------------------------|
 | ~M-x gptel-switch-profile~ | Directive + backend + model together |
@@ -80,6 +80,7 @@ General characteristics:
 
 * Using Emacs
 ** General
+
 | Key       | Description                                  |
 |-----------+----------------------------------------------|
 | ~C-x u~   | Undo tree                                    |
@@ -89,7 +90,9 @@ General characteristics:
 | ~C-x C-f~ | Open a file. Starts in the current directory |
 
 ** Hippie-expand basics
+
    Usage patterns:
+
 | ~M-/~     | Smart expansion with all strategies                       |
 | ~C-M-/~   | Expand full lines only (great for repeating similar code) |
 | ~C-c /~   | Case-sensitive expansion                                  |
@@ -98,7 +101,9 @@ General characteristics:
 | ~C-c f /~ | File name completion only                                 |
 
 ** Paredit
+
    Paredit operations are semantic:
+
 | Key       | Description          |
 |-----------+----------------------|
 | ~C-→~     | slurp (expand form)  |
@@ -108,6 +113,7 @@ General characteristics:
 | ~C-M-f/b~ | navigate by form     |
 
 ** Navigation:
+
 | Key         | Description                   |
 |-------------+-------------------------------|
 | ~C-M-f~     | Forward by expression         |
@@ -122,6 +128,7 @@ General characteristics:
 | ~C-M-→~     | Barf left                     |
 
 ** Wrapping:
+
 | Key               | Description              |
 |-------------------+--------------------------|
 | ~M-(~             | Wrap with ()             |
@@ -130,6 +137,7 @@ General characteristics:
 | ~M-J~             | Join expressions         |
 
 ** Consult
+
 | Key     | Description                                                                  |
 |---------+------------------------------------------------------------------------------|
 | ~C-x b~ | consult-buffer    - Buffer switching with groups (files, buffers, bookmarks) |
@@ -137,3 +145,17 @@ General characteristics:
 | ~M-g g~ | consult-goto-line - Better goto-line with preview                            |
 | ~M-g i~ | consult-imenu     - Navigate code structure (great for Clojure!)             |
 
+** Company - Complete Anything!
+
+   My configuration use company-mode for lsp completion:
+
+| Key     | Description                               |
+|---------+-------------------------------------------|
+| =C-M-i= | Trigger completion-at-point               |
+| =C-n=   | Next candidate (in Vertico list)          |
+| =C-p=   | Previous candidate                        |
+| =RET=   | Accept selected candidate                 |
+| =C-g=   | Abort completion                          |
+| =M-.=   | Jump to definition (via LSP / lsp-ui)     |
+| =M-?=   | Find references (via lsp-ui)              |
+| =TAB=   | May also trigger or cycle (check binding) |
