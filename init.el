@@ -68,11 +68,14 @@
      lsp-mode
      lsp-ui
      orderless
+     org-present
+     ox-reveal
      paredit
      perspective
      rainbow-delimiters
      undo-tree
      vertico
+     visual-fill-column
      )))
 
 (condition-case nil
@@ -96,6 +99,7 @@
 ;;(eval-after-load 'org '(require 'setup-org))
 (eval-after-load 'magit '(require 'setup-magit))
 
+
 (require 'setup-undo-tree)
 (require 'setup-vertico)
 (require 'setup-orderless)
@@ -106,6 +110,7 @@
 (require 'setup-lsp)
 (require 'setup-paredit)
 (require 'setup-defaults)
+(require 'setup-visual-fill-column)
 (require 'key-bindings)
 (require 'setup-gptel)
 ;;(require 'mode-mappings) ;; TODO

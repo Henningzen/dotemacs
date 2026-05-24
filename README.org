@@ -32,9 +32,11 @@ General characteristics:
 
 * Packages
 ** dash
-   Proper list API for Emacs Lisp, Magnar Sveen)
 
+   Proper list API for Emacs Lisp, Magnar Sveen)
+   
 ** clojure-lsp
+
    Installed with script in /usr/local/bin,
    https://emacs-lsp.github.io/lsp-mode/tutorials/clojure-guide/  (Eric Dallo)
 
@@ -69,6 +71,7 @@ General characteristics:
    + Paredit and structural editing untouched
 
 ** gptel
+
    Directive and instructions are set in 'settings/setup-gptel.el'
 
 | command                    | Description                          |
@@ -77,8 +80,16 @@ General characteristics:
 | ~M-x gptel-set-directives~ | Directive only                       |
 | ~M-x gptel-switch-backend~ | Backend/model only                   |
 
+** org-present
 
-* Using Emacs
+   TBA
+
+** visual-fill-column
+
+   TBA
+
+
+q* Using Emacs
 ** General
 
 | Key       | Description                                  |
@@ -159,3 +170,11 @@ General characteristics:
 | =M-.=   | Jump to definition (via LSP / lsp-ui)     |
 | =M-?=   | Find references (via lsp-ui)              |
 | =TAB=   | May also trigger or cycle (check binding) |
+
+
+* Presenting
+
+** org-present
+
+
+** org-reveal
