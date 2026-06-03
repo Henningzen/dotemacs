@@ -44,6 +44,29 @@ bash, yaml, json).
 4. Structure with headings (*, **, ***), lists, and named code blocks.
 5. Be concise: favour clarity over verbosity.")))
 
+(setq gptel-directive-elisp
+      '((default . "You are a pro pair programmer in Emacs, specializing in
+Emacs Lisp, elisp  design, architecture and development. Follow these principles:
+- Write idiomatic elisp code with emphasis on idiomatic and clean Emacs Lisp best practices
+- Debugging and optimizing existing code
+- Explaining complex concepts step-by-step
+- Prefer proven designs for Emacs solutions
+
+When explaining code:
+1. Start with the high-level concept
+2. Show a minimal working example
+3. Build complexity incrementally
+4. Highlight key insights with =inline code= or *emphasis*
+5. Explain 'why' before 'how'
+
+Output format:
+1. Use Emacs Org mode syntax for all responses.
+2. Keep lines under 80 characters.
+3. Use #+begin_src blocks with language tags (elisp, csharp, shell,
+bash, yaml, json).
+4. Structure with headings (*, **, ***), lists, and named code blocks.
+5. Be concise: favour clarity over verbosity.")))
+
 (setq gptel-directive-architect
       '((default . "You are a large language model living in Emacs and a helpful
 assistant Software Engineer and Systems Architect.
@@ -153,12 +176,13 @@ Safety and sources:
   `(("architect"     . ,gptel-directive-architect)
     ("sweng"         . ,gptel-directive-sweng)
     ("clojure"       . ,gptel-directive-clojure)
+    ("elisp"         . ,gptel-directive-elisp)
     ("writing-buddy" . ,gptel-directive-writing-buddy))
   "Alist mapping directive names to directive values.")
 
 (defun gptel-set-directives (directives)
-  "Set gptel-directives and update the system message.
-When called interactively, prompt with completing-read."
+  "Set gptel-directives and update the system message. When called
+   interactively, prompt with completing-read."
   (interactive
    (list (alist-get (completing-read "Directive: "
                                      gptel-directive-alist nil t)
@@ -188,32 +212,29 @@ When called interactively, prompt with completing-read."
                       :endpoint "/v1/chat/completions"
                       :stream t
                       :key (my/get-secret "api.mistral.ai" "apikey")
-                      :models '(mistral-large-2512
-				mistral-medium-3-5
-                                codestral-2508
-                                devstral-2512)))
+                      :models '(mistral-medium-3-5
+                                codestral-2508)))
 
 (setq gptel-claude-opus (gptel-make-anthropic "Claude Opus"
                           :stream t
                           :key (my/get-secret "api.anthropic.ai" "apikey")
-                          :models '(claude-opus-4-7)))
+                          :models '(claude-opus-4-8)))
 
 (setq gptel-backend gptel-mistral
-      gptel-model 'mistral-large-2512)
+      gptel-model 'mistral-medium-3-5)
 
 ;; --- Backend alist (for interactive selection) ---------------------------
 
 (defvar gptel-backend-alist
-  `(("mistral-large"  . (,gptel-mistral     . mistral-large-2512))
-    ("mistral-medium" . (,gptel-mistral     . mistral-medium-3-5))
+  `(("mistral-medium" . (,gptel-mistral     . mistral-medium-3-5))
     ("codestral"      . (,gptel-mistral     . codestral-2508))
-    ("devstral"       . (,gptel-mistral     . devstral-2512))
-    ("claude-opus"    . (,gptel-claude-opus . claude-opus-4-7)))
+    ("devstral"       . (,gptel-mistral     . mistral-medium-3-5))
+    ("claude-opus"    . (,gptel-claude-opus . claude-opus-4-8)))
   "Alist mapping names to (backend . model) pairs.")
 
 (defun gptel-switch-backend (backend model)
-  "Switch to the specified BACKEND and MODEL.
-When called interactively, prompt with completing-read."
+  "Switch to the specified BACKEND and MODEL. When called interactively,
+   prompt with completing-read."
   (interactive
    (let* ((choice (completing-read "Backend: "
                                    gptel-backend-alist nil t))
@@ -230,16 +251,19 @@ When called interactively, prompt with completing-read."
 (defvar gptel-profile-alist
   `(("architect"     . (:directives ,gptel-directive-architect
                          :backend    ,gptel-mistral
-                         :model      mistral-large-2512))
+                         :model      mistral-medium-3-5))
     ("sweng"         . (:directives ,gptel-directive-sweng
                          :backend    ,gptel-mistral
-                         :model      mistral-large-2512))
+                         :model      mistral-medium-3-5))
     ("clojure"       . (:directives ,gptel-directive-clojure
                          :backend    ,gptel-mistral
                          :model      codestral-2508))
+    ("elisp  "       . (:directives ,gptel-directive-elisp
+                         :backend    ,gptel-mistral
+                         :model      mistral-medium-3-5))
     ("writing-buddy" . (:directives ,gptel-directive-writing-buddy
-                         :backend    ,gptel-claude-opus
-                         :model      claude-opus-4-7)))
+				    :backend    ,gptel-claude-opus
+				    :model      claude-opus-4-8)))
   "Alist mapping profile names to (directives backend model).")
 
 (defun gptel-switch-profile (profile-name)
