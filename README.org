@@ -178,3 +178,14 @@ q* Using Emacs
 
 
 ** org-reveal
+
+
+* Mermaid diagraming
+
+  mermaid-mode key bindings
+
+| Key       | Description                            |
+|-----------+----------------------------------------|
+| =C-c C-c= | Compile current buffer/region to image |
+| =C-c C-o= |                                        |
+| =C-c C-d= | Open mermaid.live docs                 |

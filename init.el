@@ -65,6 +65,8 @@
      magit
      marginalia
      markdown-mode
+     mermaid-mode
+     ob-mermaid       ;; Org-mode support for Mermaid
      lsp-mode
      lsp-ui
      orderless
@@ -72,7 +74,6 @@
      ox-reveal
      paredit
      perspective
-     rainbow-delimiters
      undo-tree
      vertico
      visual-fill-column
@@ -113,6 +114,7 @@
 (require 'setup-visual-fill-column)
 (require 'key-bindings)
 (require 'setup-gptel)
+(require 'setup-mermaid)
 ;;(require 'mode-mappings) ;; TODO
 
 (provide 'init)
