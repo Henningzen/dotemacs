@@ -53,8 +53,10 @@
   (packages-install
    '(
      browse-kill-ring
+     cape   ;; extra completion backends, ref corfu
      cider
      clojure-mode
+     corfu
      consult
      dash
      diff-hl
@@ -74,6 +76,9 @@
      ox-reveal
      paredit
      perspective
+     sly              ;; All things Sly
+     sly-quicklisp    ;; Quicklisp Sly integration (browse/load systems)
+     sly-asdf         ;; ASDF Sly system support
      undo-tree
      vertico
      visual-fill-column
@@ -106,10 +111,12 @@
 (require 'setup-orderless)
 (require 'setup-marginalia)
 (require 'setup-consult)
+(require 'setup-corfu)
 (require 'setup-magit)
 (require 'setup-perspective)
-(require 'setup-lsp)
+;;(require 'setup-lsp)
 (require 'setup-paredit)
+(require 'setup-sly)
 (require 'setup-defaults)
 (require 'setup-visual-fill-column)
 (require 'key-bindings)

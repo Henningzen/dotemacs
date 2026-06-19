@@ -25,9 +25,13 @@ General characteristics:
   + Marginalia     → Minibuffer annotations
   + Perspective    → Per-project buffer isolation
   + Clojure-lsp    → Static analysis, navigation, refactoring
-  + Cider          → REPL, evaluation, debugging
+  + Cider          → REPL, evaluation, debugging (Clojure)
+  + Sly            → REPL, evaluation, navigation (Common Lisp)
+  + Quicklisp      → Common Lisp library manager
   + Paredit        → Structural editing
-  + completion     → completion-at-point (LSP) + Hippie Expand
+  + Corfu/Cape     → In-buffer completion (completion-at-point UI)
+  + completion     → completion-at-point (LSP/Sly) via Corfu + Cape
+
 
 
 * Packages
@@ -80,7 +84,57 @@ General characteristics:
 | ~M-x gptel-set-directives~ | Directive only                       |
 | ~M-x gptel-switch-backend~ | Backend/model only                   |
 
-** org-present
+** corfu / cape
+
+   In-buffer completion UI, the companion to Vertico for
+   =completion-at-point=. Corfu renders the popup; Cape supplies extra
+   backends (file paths, dabbrev, etc.).
+
+   Configured in 'settings/setup-corfu.el'.
+
+*** Why Corfu, not Company:
+   + CAPF-native, same minimalist philosophy as Vertico/Orderless
+   + Works automatically with LSP, Cider and Sly - no per-mode backends
+   + Fewer moving parts, lighter than company-mode
+
+*** Behaviour:
+   + Popup appears automatically while typing (corfu-auto)
+   + corfu-popupinfo shows docs for the selected candidate
+
+| Key     | Description                                  |
+|---------+----------------------------------------------|
+| =TAB=   | Complete / cycle candidates                  |
+| =C-n=   | Next candidate                               |
+| =C-p=   | Previous candidate                           |
+| =RET=   | Accept selected candidate                    |
+| =C-g=   | Abort completion                             |
+| =M-d=   | Toggle documentation popup (corfu-popupinfo) |
+| =C-M-i= | Manually trigger completion-at-point         |
+
+** sly
+
+   Common Lisp IDE, the SBCL counterpart to Cider. Configured in
+   'settings/setup-sly.el'.
+
+*** Setup notes:
+   + SBCL installed system-wide via =apt install sbcl= (=/usr/bin/sbcl=)
+   + =inferior-lisp-program= set to "sbcl"
+   + Completion via completion-at-point - works with Corfu, no extra wiring
+   + Contribs: sly-quicklisp, sly-asdf (loaded if present)
+
+*** Quicklisp:
+   + Installed per-user in =~/quicklisp/= (NOT system-wide / not under sudo)
+   + Loaded at SBCL startup via =~/.sbclrc= (written by =ql:add-to-init-file=)
+   + Because Sly launches sbcl as your user, it reads your ~/.sbclrc and
+     Quicklisp is available automatically in the REPL
+
+*** NOTE to self:
+   + Files in $HOME must be owned by your dev user, not root. A missing or
+     root-owned ~/.sbclrc is the usual cause of the slynk-quicklisp
+     MISSING-DEPENDENCY error at connect time.
+
+
+* org-present
 
    TBA
 
@@ -89,7 +143,7 @@ General characteristics:
    TBA
 
 
-q* Using Emacs
+* Using Emacs
 ** General
 
 | Key       | Description                                  |
@@ -156,20 +210,46 @@ q* Using Emacs
 | ~M-g g~ | consult-goto-line - Better goto-line with preview                            |
 | ~M-g i~ | consult-imenu     - Navigate code structure (great for Clojure!)             |
 
-** Company - Complete Anything!
+** Sly (Common Lisp REPL)
 
-   My configuration use company-mode for lsp completion:
+   Start with =M-x sly= (launches sbcl and connects to a *sly-mrepl*).
 
-| Key     | Description                               |
-|---------+-------------------------------------------|
-| =C-M-i= | Trigger completion-at-point               |
-| =C-n=   | Next candidate (in Vertico list)          |
-| =C-p=   | Previous candidate                        |
-| =RET=   | Accept selected candidate                 |
-| =C-g=   | Abort completion                          |
-| =M-.=   | Jump to definition (via LSP / lsp-ui)     |
-| =M-?=   | Find references (via lsp-ui)              |
-| =TAB=   | May also trigger or cycle (check binding) |
+| Key         | Description                          |
+|-------------+--------------------------------------|
+| =M-x sly=   | Start / connect REPL                  |
+| =C-c C-c=   | Compile current top-level form        |
+| =C-c C-k=   | Compile & load whole file             |
+| =C-x C-e=   | Eval form before point                |
+| =C-c C-z=   | Switch to REPL                        |
+| =M-.=       | Jump to definition                    |
+| =M-,=       | Jump back                             |
+| =C-c C-d d= | Describe symbol                       |
+| =C-c C-d h= | HyperSpec lookup                      |
+
+*** Sly REPL history
+
+    SLY history is bound to M-p/M-n by default; CIDER-style arrow
+    bindings are added in setup-sly.el.
+
+| Key       | Description                              |
+|-----------+------------------------------------------|
+| =M-p=     | Previous input                           |
+| =M-n=     | Next input                               |
+| =M-r=     | Search history backwards (incremental)   |
+| =M-s=     | Search history forwards                  |
+| =C-<up>=  | Previous input (CIDER-style, custom)     |
+| =C-<down>=| Next input (CIDER-style, custom)         |
+
+    Note: history is persistent across sessions.
+
+*** Quicklisp from the REPL
+
+| Command / Form                  | Description                          |
+|---------------------------------+--------------------------------------|
+| =M-x sly-quickload=             | Load a system interactively          |
+| =(ql:quickload :alexandria)=    | Load a library                       |
+| =(ql:system-apropos "json")=    | Search available systems             |
+| =(ql:update-all-dists)=         | Update library distributions         |
 
 
 * Presenting
