@@ -19,64 +19,89 @@
 #+end_quote
 
 General characteristics:
-  + Vertico        → Vertical completion interface
-  + Consult        → Smart buffer/file/line commands
-  + Orderless      → Space-separated fuzzy matching
-  + Marginalia     → Minibuffer annotations
-  + Perspective    → Per-project buffer isolation
-  + Clojure-lsp    → Static analysis, navigation, refactoring
-  + Cider          → REPL, evaluation, debugging (Clojure)
-  + Sly            → REPL, evaluation, navigation (Common Lisp)
-  + Quicklisp      → Common Lisp library manager
-  + Paredit        → Structural editing
-  + Corfu/Cape     → In-buffer completion (completion-at-point UI)
-  + completion     → completion-at-point (LSP/Sly) via Corfu + Cape
-
++ Vertico        → Vertical completion interface
++ Consult        → Smart buffer/file/line commands
++ Orderless      → Space-separated fuzzy matching
++ Marginalia     → Minibuffer annotations
++ Perspective    → Per-project buffer isolation
++ Cider          → REPL, evaluation, debugging (Clojure)
++ Sly            → REPL, evaluation, navigation (Common Lisp)
++ Quicklisp      → Common Lisp library manager
++ Paredit        → Structural editing
++ Corfu/Cape     → In-buffer completion (completion-at-point UI)
++ completion     → completion-at-point (Cider/Sly) via Corfu + Cape
 
 
 * Packages
 ** dash
+Proper list API for Emacs Lisp, Magnar Sveen)
 
-   Proper list API for Emacs Lisp, Magnar Sveen)
+** corfu / cape
+In-buffer completion UI, the companion to Vertico for =completion-at-point=.
+Corfu take care of rendering the popup, while Cape supplies extra backends
+(file paths, dabbrev, etc.).
+
+Configured in 'settings/setup-corfu.el'.
+
+*** Why Corfu, not Company:
++ CAPF-native (completion-at-point-functions) same minimalist philosophy
+  as Vertico and Orderless
++ Works automatically with Cider and Sly - no config per backend
++ Less complexity from fewer moving parts, and lighter than company-mode
+
+*** Behaviour:
++ Popups will appear automatically while typing (corfu-auto)
++ corfu-popupinfo shows docs for the selected candidate
+
+| Key     | Description                                  |
+|---------+----------------------------------------------|
+| =TAB=   | Complete / cycle candidates                  |
+| =C-n=   | Next candidate                               |
+| =C-p=   | Previous candidate                           |
+| =RET=   | Accept selected candidate                    |
+| =C-g=   | Abort completion                             |
+| =M-d=   | Toggle documentation popup (corfu-popupinfo) |
+| =C-M-i= | Manually trigger completion-at-point         |
    
-** clojure-lsp
+** clojure-lsp [DISABLED]
+Disabled for now in favor of Cider 2.x. Configuration code retained for
+future reference.
 
-   Installed with script in /usr/local/bin,
-   https://emacs-lsp.github.io/lsp-mode/tutorials/clojure-guide/  (Eric Dallo)
+Installed with script in /usr/local/bin,
+https://emacs-lsp.github.io/lsp-mode/tutorials/clojure-guide/  (Eric Dallo)
 
-   Official guide, but with tweaks:
+*** Official guide, but with tweaks:*
+What I kept:
++ Performance tuning (gc-cons-threshold, read-process-output-max)
++ Hooks for clojure-mode, clojurescript-mode, clojurec-mode
++ LSP as the intelligence layer
 
-   What I kept:
-   + Performance tuning (gc-cons-threshold, read-process-output-max)
-   + Hooks for clojure-mode, clojurescript-mode, clojurec-mode
-   + LSP as the intelligence layer
+What I have changed or removed:
++ Removed company-mode, because...
++ LSP provides completion via completion-at-point
++ Works with the existing Vertico/Orderless stack
++ Less complexity while LSP is driving, it simpler, fewer moving parts involved.
++ Removed flycheck - LSP has built-in diagnostics.
 
-   What I have changed or removed:
-   + company-mode (for now)
-   + LSP provides completion via completion-at-point
-   + Works with our existing Vertico/Orderless stack
-   + Simpler, fewer moving parts
-   + Removed flycheck - LSP has built-in diagnostics.
+Characteristics (observed so far):
++ lsp-mode shows errors/warnings automatically
++ No need for separate checker
++ (Removed lsp-treemacs)
 
-   Characteristics (observed so far):
-   + lsp-mode shows errors/warnings automatically
-   + No need for separate checker
-   + Removed lsp-treemacs
+Usage (what I learned so far):
++ Jump to definition - M-. (lsp-ui-peek)
++ Find references - M-?
++ Completion - Works with TAB/completion-at-point
++ Rename - C-c l r
++ Code actions - C-c l a
++ Hover documentation - Automatic in minibuffer
++ Diagnostics - Errors/warnings inline
++ Compliant with Cider
++ Paredit and structural editing untouched
 
-   Usage (so far):
-   + Jump to definition - M-. (lsp-ui-peek)
-   + Find references - M-?
-   + Completion - Works with TAB/completion-at-point
-   + Rename - C-c l r
-   + Code actions - C-c l a
-   + Hover documentation - Automatic in minibuffer
-   + Diagnostics - Errors/warnings inline
-   + Compliant with Cider
-   + Paredit and structural editing untouched
 
 ** gptel
-
-   Directive and instructions are set in 'settings/setup-gptel.el'
+Directive and instructions are set in 'settings/setup-gptel.el'
 
 | command                    | Description                          |
 |----------------------------+--------------------------------------|
@@ -84,22 +109,43 @@ General characteristics:
 | ~M-x gptel-set-directives~ | Directive only                       |
 | ~M-x gptel-switch-backend~ | Backend/model only                   |
 
-** corfu / cape
+** sly
+Common Lisp IDE, the SBCL counterpart to Cider. Configured in
+'settings/setup-sly.el'.
 
-   In-buffer completion UI, the companion to Vertico for
-   =completion-at-point=. Corfu renders the popup; Cape supplies extra
-   backends (file paths, dabbrev, etc.).
+*** Setup notes:
++ SBCL installed system-wide via =apt install sbcl= (=/usr/bin/sbcl=)
++ =inferior-lisp-program= set to "sbcl"
++ Completion via completion-at-point - works with Corfu, no extra wiring
++ Contribs: sly-quicklisp, sly-asdf (loaded if present)
 
-   Configured in 'settings/setup-corfu.el'.
+*** Quicklisp:
++ Installed per-user in =~/quicklisp/= (NOT system-wide / not under sudo)
++ Loaded at SBCL startup via =~/.sbclrc= (written by =ql:add-to-init-file=)
++ Because Sly launches sbcl as your user, it reads your ~/.sbclrc and
+  Quicklisp is available automatically in the REPL
 
-*** Why Corfu, not Company:
-   + CAPF-native, same minimalist philosophy as Vertico/Orderless
-   + Works automatically with LSP, Cider and Sly - no per-mode backends
-   + Fewer moving parts, lighter than company-mode
+*** NOTE to self:
++ Files in $HOME must be owned by your dev user, not root. A missing or
+  root-owned ~/.sbclrc is the usual cause of the slynk-quicklisp
+  MISSING-DEPENDENCY error at connect time.
 
-*** Behaviour:
-   + Popup appears automatically while typing (corfu-auto)
-   + corfu-popupinfo shows docs for the selected candidate
+
+* org-present
+TBA
+
+** visual-fill-column
+TBA
+
+
+* Using Emacs
+
+** Completion
+Two complementary strategies for text completion:
+
+*** Primary: Corfu (automatic popup)
+Default completion UI that pops up while you type. Works with Cider, Sly, and
+file paths via Cape. This is the best choice for typical completion scenarios.
 
 | Key     | Description                                  |
 |---------+----------------------------------------------|
@@ -111,39 +157,19 @@ General characteristics:
 | =M-d=   | Toggle documentation popup (corfu-popupinfo) |
 | =C-M-i= | Manually trigger completion-at-point         |
 
-** sly
 
-   Common Lisp IDE, the SBCL counterpart to Cider. Configured in
-   'settings/setup-sly.el'.
+*** Supplementary: Hippie-expand (manual expansion)
+Triggered manually with ~M-/~. Cycles through various expansion strategies
+(dabbrev, file names, lines, symbols). Gives me an option for different
+expansion styles or if I need more control.
 
-*** Setup notes:
-   + SBCL installed system-wide via =apt install sbcl= (=/usr/bin/sbcl=)
-   + =inferior-lisp-program= set to "sbcl"
-   + Completion via completion-at-point - works with Corfu, no extra wiring
-   + Contribs: sly-quicklisp, sly-asdf (loaded if present)
+| ~M-/~     | Smart expansion with all strategies                       |
+| ~C-M-/~   | Expand full lines only (great for repeating similar code) |
+| ~C-c /~   | Case-sensitive expansion                                  |
+| ~C-c M-/~ | Words/symbols only (no file paths or lines)               |
+| ~C-c C-/~ | Current buffer only (faster, less noise)                  |
+| ~C-c f /~ | File name completion only                                 |
 
-*** Quicklisp:
-   + Installed per-user in =~/quicklisp/= (NOT system-wide / not under sudo)
-   + Loaded at SBCL startup via =~/.sbclrc= (written by =ql:add-to-init-file=)
-   + Because Sly launches sbcl as your user, it reads your ~/.sbclrc and
-     Quicklisp is available automatically in the REPL
-
-*** NOTE to self:
-   + Files in $HOME must be owned by your dev user, not root. A missing or
-     root-owned ~/.sbclrc is the usual cause of the slynk-quicklisp
-     MISSING-DEPENDENCY error at connect time.
-
-
-* org-present
-
-   TBA
-
-** visual-fill-column
-
-   TBA
-
-
-* Using Emacs
 ** General
 
 | Key       | Description                                  |
@@ -154,20 +180,8 @@ General characteristics:
 | ~C-M-k~   | Kill forward expression                      |
 | ~C-x C-f~ | Open a file. Starts in the current directory |
 
-** Hippie-expand basics
-
-   Usage patterns:
-
-| ~M-/~     | Smart expansion with all strategies                       |
-| ~C-M-/~   | Expand full lines only (great for repeating similar code) |
-| ~C-c /~   | Case-sensitive expansion                                  |
-| ~C-c M-/~ | Words/symbols only (no file paths or lines)               |
-| ~C-c C-/~ | Current buffer only (faster, less noise)                  |
-| ~C-c f /~ | File name completion only                                 |
-
 ** Paredit
-
-   Paredit operations are semantic:
+Paredit operations are semantic:
 
 | Key       | Description          |
 |-----------+----------------------|
@@ -227,9 +241,8 @@ General characteristics:
 | =C-c C-d h= | HyperSpec lookup                      |
 
 *** Sly REPL history
-
-    SLY history is bound to M-p/M-n by default; CIDER-style arrow
-    bindings are added in setup-sly.el.
+SLY history is bound to M-p/M-n by default; CIDER-style arrow bindings are added
+in setup-sly.el.
 
 | Key       | Description                              |
 |-----------+------------------------------------------|
@@ -240,7 +253,7 @@ General characteristics:
 | =C-<up>=  | Previous input (CIDER-style, custom)     |
 | =C-<down>=| Next input (CIDER-style, custom)         |
 
-    Note: history is persistent across sessions.
+*Note: history is persistent across sessions.*
 
 *** Quicklisp from the REPL
 
@@ -261,8 +274,7 @@ General characteristics:
 
 
 * Mermaid diagraming
-
-  mermaid-mode key bindings
+mermaid-mode key bindings
 
 | Key       | Description                            |
 |-----------+----------------------------------------|
