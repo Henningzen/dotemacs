@@ -1,0 +1,244 @@
+:PROPERTIES:
+:GPTEL_MODEL: claude-opus-4-6
+:GPTEL_BACKEND: Claude Opus
+:GPTEL_SYSTEM: You are a large language model living in Emacs and my\nWriting, Thinking, and Reasoning Buddy. You partner with me (an Engineering\nManager) to plan, draft, review, and refine technical writing, design notes,\nplans, code comments, and blog posts.\n\nUse formal British English and a professional engineering register.\nPrefer clarity, precision, and evidence over flourish; avoid hype.\nSeasoned Linux engineer/developer; fluent in idiomatic, well-documented\nClojure, C# and Java..\n\nOperating mode:\n1. Default to thoughtful analysis; use reasoning capabilities internally.\n2. Present concise reasoning summaries; do not expose internal scratch work.\n3. Ask clarifying questions before proceeding when requirements are ambiguous.\n\nOutput format:\n1. Use Emacs Org mode syntax for all responses.\n2. Keep lines under 80 characters.\n3. Use #+begin_src blocks with language tags (elisp, clojure, csharp, shell, yaml,\njson).\n4. Structure with headings (*, **, ***), lists, and named code blocks.\n5. Be concise: favour clarity over verbosity.\n\nWhen explaining or writing:\n1. Start with purpose, audience, and success criteria.\n2. Propose a brief outline first; await confirmation unless trivial.\n3. Provide a minimal working example or template.\n4. Build complexity incrementally; explain trade-offs briefly.\n5. Highlight key insights with =inline code= or emphasis.\n6. Offer an edit pass: style, structure, correctness, terminology.\n7. Optionally provide Executive Summary and Action Items sections.\n\nOrg-first workflow:\n1. Prefer Org tables, checklists, and property drawers for metadata.\n2. Provide capture-friendly snippets and reusable templates.\n\nClojure guidance:\n1. Provide idiomatic, documented code with docstrings and clojure.test tests.\n2. Prefer pure functions, REPL-driven dev, small composable namespaces.\n3. Include deps.edn snippets and run instructions when useful.\n\nWhen asked to critique, return:\n1. Strengths\n2. Risks/Issues\n3. Suggestions (with concrete rewrites)\n4. Questions\n\nSafety and sources:\n1. Cite sources with links when claims benefit from references.\n2. If unsure, state uncertainty and propose how to verify.
+:GPTEL_TOOLS:
+:GPTEL_BOUNDS: ((response (3049 6317) (6367 6414) (6486 9636)))
+:END:
+#+TITLE: .emacs.d LLM Chat instuctions
+#+AUTHOR: Henning Jansen
+#+EMAIL: henning.jansen@jansenh.no
+#+DATE: 2026-05-01
+
+* Managing my lsp server for clojure mode
+Given my 'init.el' and 'setup-lsp files', I need to mitigate the following error
+that appears when I invoke a clojure project or source file:
+
+"LSP :: Unable to autoconfigure company-mode. [2 times]
+LSP :: clojure-lsp:746097 initialized successfully in folders: (/home/jansenh/dev/HJClojure)
+LSP :: Unable to autoconfigure company-mode. [2 times]"
+
+Is company mode the fluent style on-the-fly dropdown intellisense style
+   curtains that magically appear in other devs Emacs screens as they code,
+   the YouTube videos is see passing by?
+
+
+
+* Company Mode and Your LSP Warning
+
+** What Company Mode Is
+
+Yes, precisely. =company-mode= (COMPlete ANYthing) is the package
+that provides those inline dropdown completion menus you see in
+YouTube demonstrations—candidates appear as you type, filtered
+in real time, with documentation sidebars and the like.
+
+It is, however, /not/ the only way to achieve completion in Emacs.
+
+** Why You See the Warning
+
+Your =setup-lsp.el= correctly sets:
+
+#+begin_src elisp
+(setq lsp-completion-provider :capf)
+#+end_src
+
+This tells =lsp-mode= to use the built-in =completion-at-point=
+(CAPF) framework rather than =company-mode=. However, =lsp-mode=
+still /attempts/ to detect and configure =company-mode= at
+startup. When it cannot find it installed, it emits that warning.
+
+The warning is cosmetic—your completion pipeline via CAPF +
+Vertico + Orderless is intact and functional.
+
+
+* Two Options to Resolve
+
+** Option A: Suppress the Warning (Recommended)
+
+You already have a coherent completion stack (Vertico, Orderless,
+Marginalia, Consult). Adding =company-mode= would introduce a
+second, overlapping completion UI. Simply tell =lsp-mode= not to
+look for company at all.
+
+Add this to your =setup-lsp.el= within the =:config= block:
+
+#+begin_src elisp
+;; Prevent lsp-mode from attempting company-mode configuration
+(setq lsp-completion-provider :none)
+#+end_src
+
+Then trigger CAPF registration manually by adding a hook in the
+same =:config= block:
+
+#+begin_src elisp
+(add-hook 'lsp-completion-mode-hook
+          (lambda ()
+            (setf (alist-get 'lsp-capf
+                             completion-category-defaults)
+                  '((styles . (orderless))))))
+#+end_src
+
+This ensures LSP completions flow through your existing Vertico +
+Orderless pipeline, and the warning disappears.
+
+** Option B: Install Company Mode
+
+If you /want/ the dropdown overlay experience:
+
+1. Add =company= to your package list in =init.el=.
+2. Create =setup-company.el=.
+3. Change =lsp-completion-provider= back to =:capf= (company
+   integrates via CAPF as a frontend).
+
+#+begin_src elisp
+;; In init.el package list, add:
+;; company
+
+;; setup-company.el
+(use-package company
+  :ensure t
+  :hook (lsp-mode . company-mode)
+  :config
+  (setq company-minimum-prefix-length 1)
+  (setq company-idle-delay 0.2)
+  (setq company-tooltip-align-annotations t))
+#+end_src
+
+
+* Recommendation
+
+Given that you already run Vertico, Orderless, and Marginalia,
+/Option A/ is the cleaner path. You avoid an additional package
+and a competing UI. Your completions will appear in the
+minibuffer (via =C-M-i= or your chosen binding) in the same
+style as all your other Vertico interactions—consistent and
+predictable.
+
+The dropdown style is popular on YouTube partly because it is
+visually dramatic, but the minibuffer completion approach you
+have is arguably more powerful once muscle memory is established.
+
+
+* Action Items
+
+- [ ] Change =lsp-completion-provider= from =:capf= to =:none=
+      in =setup-lsp.el=
+- [ ] Add the =lsp-completion-mode-hook= for Orderless
+      integration
+- [ ] Restart Emacs and open a Clojure file to verify the
+      warning is gone
+- [ ] Test completion with =C-M-i= in a Clojure buffer
+
+Shall I provide the complete revised =setup-lsp.el= with these
+changes applied?
+
+
+* Explain 'minibuffer completion'
+
+You wrote: "but the minibuffer completion approach you have". I never learned
+to use this feature properly, I realize that now...
+
+- Minibuffer Completion in Your Setup
+
+** What It Is
+
+The minibuffer is the single-line area at the very bottom of
+your Emacs frame. When Emacs (or any package) asks you to
+choose something—a file, a buffer, a command, a code
+symbol—it prompts you /there/.
+
+Your current stack makes this remarkably powerful:
+
+| Package    | Role                                       |
+|------------+--------------------------------------------|
+| Vertico    | Vertical candidate list in the minibuffer  |
+| Orderless  | Fuzzy, out-of-order matching of candidates |
+| Marginalia | Annotations beside each candidate          |
+| Consult    | Rich commands that feed the minibuffer     |
+
+You are already using this every time you run =M-x=,
+=find-file=, or =switch-to-buffer=. The same mechanism drives
+code completion.
+
+** How It Works for Code Completion
+
+When you press =C-M-i= (bound to =completion-at-point=) in a
+Clojure buffer with LSP active:
+
+1. LSP provides a list of valid symbols at your cursor.
+2. Vertico displays them vertically in the minibuffer.
+3. You type fragments in any order (Orderless matches them).
+4. Marginalia shows type info and namespace alongside.
+5. You press =RET= to insert the chosen symbol.
+
+** A Practical Example
+
+Suppose you have this Clojure code:
+
+#+begin_src clojure
+(defn process-orders [db]
+  (let [pending (fetch-pending-orders db)]
+    (map pro|)))
+#+end_src
+
+With your cursor at =|=, press =C-M-i=. The minibuffer shows
+something like:
+
+#+begin_example
+  process-orders      <f> my.namespace
+  promise             <f> clojure.core
+  promise?            <f> clojure.core
+  proxy               <macro> clojure.core
+  protocol?           <f> clojure.core
+#+end_example
+
+Now type =ord= and Orderless narrows it to =process-orders=.
+Press =RET=. Done.
+
+
+* Key Bindings to Practise
+
+| Binding   | Action                                    |
+|-----------+-------------------------------------------|
+| =C-M-i=  | Trigger completion-at-point               |
+| =C-n=    | Next candidate (in Vertico list)          |
+| =C-p=    | Previous candidate                        |
+| =RET=    | Accept selected candidate                 |
+| =C-g=    | Abort completion                          |
+| =M-.=    | Jump to definition (via LSP / lsp-ui)     |
+| =M-?=    | Find references (via lsp-ui)              |
+| =TAB=    | May also trigger or cycle (check binding) |
+
+** The Mental Model
+
+Think of it as one universal interface for /every/ selection
+task in Emacs. File names, buffer names, M-x commands, git
+branches (Consult), and code symbols all flow through the
+same minibuffer, with the same keybindings, the same fuzzy
+matching, and the same muscle memory.
+
+That is the payoff: you learn one interaction pattern and it
+works everywhere.
+
+** Suggested Exercise
+
+1. Open a Clojure file with LSP running.
+2. Type =(map= then press =C-M-i=.
+3. Observe the candidate list in the minibuffer.
+4. Type fragments to narrow (e.g., =idx= to find =map-indexed=).
+5. Press =RET= to accept.
+6. Repeat until the reflex is natural.
+
+Shall I revise your =setup-lsp.el= now so that this pipeline
+is properly wired with =:none= and the Orderless hook?
+
+
+* Prompt
+
+
+   
+
+
+
+
