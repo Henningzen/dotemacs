@@ -320,8 +320,8 @@ Safety and sources:
     ("sweng"           . ,gptel-directive-sweng)
     ("clojure"         . ,gptel-directive-clojure)
     ("elisp"           . ,gptel-directive-elisp)
-    ("Commonlisp"    . ,gptel-directive-commonlisp)
-    ("elisp"           . ,gptel-directive-python)
+    ("python"          . ,gptel-directive-python)
+    ("commonlisp"      . ,gptel-directive-commonlisp)
     ("writing-buddy"   . ,gptel-directive-writing-buddy)
     ("english-writing" . ,gptel-directive-english-writing))
   "Alist mapping directive names to directive values.")
@@ -375,7 +375,7 @@ Safety and sources:
   `(("mistral-medium" . (,gptel-mistral     . mistral-medium-3-5))
     ("codestral"      . (,gptel-mistral     . codestral-2508))
     ("devstral"       . (,gptel-mistral     . mistral-medium-3-5))
-    ("claude-opus"    . (,gptel-claude-opus . claude-opus-4-8)))
+    ("claude-opus"    . (,gptel-claude-opus . claude-opus-5)))
   "Alist mapping names to (backend . model) pairs.")
 
 (defun gptel-switch-backend (backend model)
@@ -403,13 +403,19 @@ Safety and sources:
 				    :model      mistral-medium-3-5))
     ("clojure"       . (:directives ,gptel-directive-clojure
 				    :backend    ,gptel-mistral
-				    :model      codestral-2508))
-    ("elisp  "       . (:directives ,gptel-directive-elisp
+				    :model      mistral-medium-3-5))
+    ("python"        . (:directives ,gptel-directive-python
 				    :backend    ,gptel-mistral
 				    :model      mistral-medium-3-5))
-    ("writing-buddy" . (:directives ,gptel-directive-writing-buddy
+    ("elisp"         . (:directives ,gptel-directive-elisp
+				    :backend    ,gptel-mistral
+				    :model      mistral-medium-3-5))
+    ("common-lisp"   . (:directives ,gptel-directive-commonlisp
 				    :backend    ,gptel-claude-opus
-				    :model      claude-opus-4-8)))
+				    :model      claude-opus-5))
+    ("writing-buddy" . (:directives ,gptel-directive-writing-buddy
+				    :backend    ,gptel-mistral
+				    :model      mistral-medium-3-5)))
   "Alist mapping profile names to (directives backend model).")
 
 (defun gptel-switch-profile (profile-name)
