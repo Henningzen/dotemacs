@@ -16,23 +16,23 @@
 
   My Emacs settings - updated for 2026
 
+** General characteristics:
+   - Completion     → completion-at-point (Cider/Sly) via Corfu - Cape
+   - Vertico        → Vertical completion interface
+   - Consult        → Smart buffer/file/line commands
+   - Orderless      → Space-separated fuzzy matching
+   - Marginalia     → Minibuffer annotations
+   - Perspective    → Per-project buffer isolation
+   - Paredit        → Structural editing
+   - Sly            → REPL, evaluation, navigation (Common Lisp)
+   - Quicklisp      → Common Lisp library manager
+   - Corfu/Cape     → In-buffer completion (completion-at-point UI)
+   - Cider          → REPL, evaluation, debugging (Clojure)
+   - Basedpyright   → Python types, navigation, rename (LSP)
+   - Ruff           → Python lint + format-on-save (LSP add-on + apheleia)
+   - uv/envrc       → Python projects with per-project venvs, auto-activated
 
-  General characteristics:
-  + Completion     → completion-at-point (Cider/Sly) via Corfu + Cape
-  + Vertico        → Vertical completion interface
-  + Consult        → Smart buffer/file/line commands
-  + Orderless      → Space-separated fuzzy matching
-  + Marginalia     → Minibuffer annotations
-  + Perspective    → Per-project buffer isolation
-  + Paredit        → Structural editing
-  + Sly            → REPL, evaluation, navigation (Common Lisp)
-  + Quicklisp      → Common Lisp library manager
-  + Corfu/Cape     → In-buffer completion (completion-at-point UI)
-  + Cider          → REPL, evaluation, debugging (Clojure)
-  + completion     → completion-at-point (LSP/Sly) via Corfu + Cape
-  + Basedpyright   → Python types, navigation, rename (LSP)
-  + Ruff           → Python lint + format-on-save (LSP add-on + apheleia)
-  + uv/envrc       → Python projects with per-project venvs, auto-activated
+** TODO Elaborate over CAPF-NATIVE stack.
 
 
 * Packages
@@ -41,7 +41,7 @@
 
    Proper list API for Emacs Lisp, Magnar Sveen)
 
-** clojure-lsp
+** clojure-lsp (not in use)
 
    Installed with script in /usr/local/bin,
    https://emacs-lsp.github.io/lsp-mode/tutorials/clojure-guide/  (Eric Dallo)
@@ -115,7 +115,6 @@
 | =M-d=   | Toggle documentation popup (corfu-popupinfo) |
 | =C-M-i= | Manually trigger completion-at-point         |
 
-
 ** clojure-lsp [DISABLED]
 
    Disabled for now in favor of Cider 2.x. Configuration code retained for
@@ -185,6 +184,7 @@
       MISSING-DEPENDENCY error at connect time.
 
 
+
 * org-present
   TBA
 
@@ -214,7 +214,6 @@
 | =M-d=   | Toggle documentation popup (corfu-popupinfo) |
 | =C-M-i= | Manually trigger completion-at-point         |
 
-
 *** Supplementary: Hippie-expand (manual expansion)
 
     Triggered manually with ~M-/~. Cycles through various expansion
@@ -232,11 +231,13 @@
 
 | Key       | Description                                  |
 |-----------+----------------------------------------------|
-| ~C-x u~   | Undo tree                                    |
 | ~C-k~     | Kill to end of form (structurally safe)      |
 | ~M-k~     | Kill whole form                              |
 | ~C-M-k~   | Kill forward expression                      |
 | ~C-x C-f~ | Open a file. Starts in the current directory |
+| ~C-_~     | Undo                                         |
+| ~C-M-_~   | Redo                                         |
+| ~C-x u~   | Undo tree - vundo tree-view                  |
 
 ** Paredit
 

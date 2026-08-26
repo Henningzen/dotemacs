@@ -1,8 +1,10 @@
-;;; package --- init.el
+;;; init.el --- My neat Emacs configuration
 ;;;
 ;;; Commentary:
 ;;;
-;;;   Henning Jansen 2025.
+;;;   Henning Jansen 2025-2026.
+;;;
+;;;   Further description is in the accompanied in the README.org file.
 ;;;
 ;;; Code:
 
@@ -87,7 +89,8 @@
      sly                    ;; All things Sly
      sly-quicklisp          ;; Quicklisp Sly integration (browse/load systems)
      sly-asdf                ;; ASDF Sly system support
-     undo-tree
+     undo-fu-session
+     vundo
      vertico
      visual-fill-column
      )))
@@ -113,8 +116,7 @@
 ;;(eval-after-load 'org '(require 'setup-org))
 (eval-after-load 'magit '(require 'setup-magit))
 
-
-(require 'setup-undo-tree)
+(require 'setup-undo)
 (require 'setup-vertico)
 (require 'setup-orderless)
 (require 'setup-marginalia)
