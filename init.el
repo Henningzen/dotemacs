@@ -52,15 +52,21 @@
 (defun init--install-packages ()
   (packages-install
    '(
+     apheleia              ;; Format-on-save (Python: ruff format + import sort)
      browse-kill-ring
-     cape   ;; extra completion backends, ref corfu
+     cape                  ;; extra completion backends, ref corfu
      cider
      clojure-mode
+     code-cells            ;; Open .ipynb as plain buffers (needs jupytext)
      corfu
      consult
+     dape                  ;; Debug Adapter Protocol client (Python: debugpy)
      dash
      diff-hl
      diminish
+     docker                ;; Manage images/containers from Emacs
+     dockerfile-mode
+     envrc                 ;; Per-project direnv envs (Python: uv .venv activation)
      find-file-in-project
      gptel
      forge
@@ -68,17 +74,19 @@
      marginalia
      markdown-mode
      mermaid-mode
-     ob-mermaid       ;; Org-mode support for Mermaid
+     ob-mermaid            ;; Org-mode support for Mermaid
      lsp-mode
+     lsp-pyright           ;; Python LSP client (basedpyright)
      lsp-ui
      orderless
      org-present
      ox-reveal
      paredit
      perspective
-     sly              ;; All things Sly
-     sly-quicklisp    ;; Quicklisp Sly integration (browse/load systems)
-     sly-asdf         ;; ASDF Sly system support
+     python-pytest          ;; Transient pytest runner
+     sly                    ;; All things Sly
+     sly-quicklisp          ;; Quicklisp Sly integration (browse/load systems)
+     sly-asdf                ;; ASDF Sly system support
      undo-tree
      vertico
      visual-fill-column
@@ -114,7 +122,6 @@
 (require 'setup-corfu)
 (require 'setup-magit)
 (require 'setup-perspective)
-;;(require 'setup-lsp)
 (require 'setup-paredit)
 (require 'setup-sly)
 (require 'setup-defaults)
@@ -122,6 +129,7 @@
 (require 'key-bindings)
 (require 'setup-gptel)
 (require 'setup-mermaid)
+(require 'setup-python)
 ;;(require 'mode-mappings) ;; TODO
 
 (provide 'init)

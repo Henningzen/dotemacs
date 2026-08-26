@@ -29,6 +29,10 @@
   + Quicklisp      → Common Lisp library manager
   + Corfu/Cape     → In-buffer completion (completion-at-point UI)
   + Cider          → REPL, evaluation, debugging (Clojure)
+  + completion     → completion-at-point (LSP/Sly) via Corfu + Cape
+  + Basedpyright   → Python types, navigation, rename (LSP)
+  + Ruff           → Python lint + format-on-save (LSP add-on + apheleia)
+  + uv/envrc       → Python projects with per-project venvs, auto-activated
 
 
 * Packages
@@ -36,6 +40,51 @@
 ** dash
 
    Proper list API for Emacs Lisp, Magnar Sveen)
+
+** clojure-lsp
+
+   Installed with script in /usr/local/bin,
+   https://emacs-lsp.github.io/lsp-mode/tutorials/clojure-guide/  (Eric Dallo)
+
+   Official guide, but with tweaks:
+
+   What I kept:
+   + Performance tuning (gc-cons-threshold, read-process-output-max)
+   + Hooks for clojure-mode, clojurescript-mode, clojurec-mode
+   + LSP as the intelligence layer
+
+   What I have changed or removed:
+   + company-mode (for now)
+   + LSP provides completion via completion-at-point
+   + Works with our existing Vertico/Orderless stack
+   + Simpler, fewer moving parts
+   + Removed flycheck - LSP has built-in diagnostics.
+
+   Characteristics (observed so far):
+   + lsp-mode shows errors/warnings automatically
+   + No need for separate checker
+   + Removed lsp-treemacs
+
+   Usage (so far):
+   + Jump to definition - M-. (lsp-ui-peek)
+   + Find references - M-?
+   + Completion - Works with TAB/completion-at-point
+   + Rename - C-c l r
+   + Code actions - C-c l a
+   + Hover documentation - Automatic in minibuffer
+   + Diagnostics - Errors/warnings inline
+   + Compliant with Cider
+   + Paredit and structural editing untouched
+
+** gptel
+
+   Directive and instructions are set in 'settings/setup-gptel.el'
+
+| command                    | Description                          |
+|----------------------------+--------------------------------------|
+| ~M-x gptel-switch-profile~ | Directive + backend + model together |
+| ~M-x gptel-set-directives~ | Directive only                       |
+| ~M-x gptel-switch-backend~ | Backend/model only                   |
 
 ** corfu / cape
 
@@ -291,3 +340,67 @@
 | =C-c C-c= | Compile current buffer/region to image |
 | =C-c C-o= |                                        |
 | =C-c C-d= | Open mermaid.live docs                 |
+
+
+* Python
+
+  Python on the uv toolchain.
+  Configured in 'settings/setup-python.el'.
+  - uv            → ONE binary replaces pyenv/pip/virtualenv/poetry
+  - basedpyright  → types, navigation, rename - the PyCharm-parity piece
+  - ruff          → lint - format - import sort (add-on LSP server)
+  - envrc/direnv  → per-project .venv, invisible after one-time setup
+  - apheleia      → ruff format - import sort on every save
+  - dape          → debugging via debugpy (modern dap-mode replacement)
+  - python-pytest → magit-style transient test runner
+  - org-babel     → literate exploration; optional Jupyter kernels
+
+  Workflow:
+  - basedpyright provides semantics (completion via Corfu, M-., rename),
+  - ruff provides style and lint,
+  - apheleia makes formatting.
+
+** Setup notes
+
+   + basedpyright and ruff installed per-user via =uv tool install=
+     into =~/.local/bin= (added to exec-path in setup-python.el)
+   + ruff runs as an add-on LSP server next to basedpyright; lint
+     rules and formatting live per-project in =pyproject.toml=
+   + envrc: each project needs =.envrc= with =. .venv/bin/activate=
+     and a one-time =direnv allow=
+   + setup-python.el is self-contained: it does not depend on
+     setup-lsp.el (Clojure, currently disabled); overlapping settings
+     are identical, so enabling both is harmless
+
+** Key-bindings
+
+| Key       | Description                                |
+|-----------+--------------------------------------------|
+| =M-.=     | Jump to definition                         |
+| =M-,=     | Jump back                                  |
+| =M-?=     | Find references                            |
+| =C-c l r= | Rename (project-wide, type-aware)          |
+| =C-c l a= | Code action (auto-import, ignore rule, ..) |
+| =C-c l d= | Describe symbol at point                   |
+| =C-c l t= | Find type definition                       |
+| =TAB=     | Complete (Corfu, LSP-fed)                  |
+| (save)    | ruff format + import sort, automatic       |
+
+| Key       | Description                          |
+|-----------+--------------------------------------|
+| =C-c C-p= | Start inferior Python REPL           |
+| =C-c C-c= | Send buffer to REPL                  |
+| =C-c C-r= | Send region                          |
+| =C-c C-e= | Send statement at point              |
+| =C-c C-z= | Switch to the REPL buffer            |
+
+| Key / Command  | Description                              |
+|----------------+------------------------------------------|
+| =M-x dape=     | Start a debug session (pick =debugpy=)   |
+| =C-x C-a b=    | Toggle breakpoint                        |
+| =C-x C-a n=    | Next (step over)                         |
+| =C-x C-a s=    | Step in                                  |
+| =C-x C-a o=    | Step out                                 |
+| =C-x C-a c=    | Continue                                 |
+| =C-x C-a q=    | Quit session                             |
+| =M-x dape-info= | Variables/breakpoints/threads windows   |
