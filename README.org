@@ -16,19 +16,20 @@
 
   My Emacs settings - updated for 2026
 
+** General characteristics:
+   - Completion     → completion-at-point (Cider/Sly) via Corfu - Cape
+   - Vertico        → Vertical completion interface
+   - Consult        → Smart buffer/file/line commands
+   - Orderless      → Space-separated fuzzy matching
+   - Marginalia     → Minibuffer annotations
+   - Perspective    → Per-project buffer isolation
+   - Paredit        → Structural editing
+   - Sly            → REPL, evaluation, navigation (Common Lisp)
+   - Quicklisp      → Common Lisp library manager
+   - Corfu/Cape     → In-buffer completion (completion-at-point UI)
+   - Cider          → REPL, evaluation, debugging (Clojure)
 
-  General characteristics:
-  + Completion     → completion-at-point (Cider/Sly) via Corfu + Cape
-  + Vertico        → Vertical completion interface
-  + Consult        → Smart buffer/file/line commands
-  + Orderless      → Space-separated fuzzy matching
-  + Marginalia     → Minibuffer annotations
-  + Perspective    → Per-project buffer isolation
-  + Paredit        → Structural editing
-  + Sly            → REPL, evaluation, navigation (Common Lisp)
-  + Quicklisp      → Common Lisp library manager
-  + Corfu/Cape     → In-buffer completion (completion-at-point UI)
-  + Cider          → REPL, evaluation, debugging (Clojure)
+** TODO Elaborate over CAPF-NATIVE stack.
 
 
 * Packages
@@ -65,7 +66,6 @@
 | =C-g=   | Abort completion                             |
 | =M-d=   | Toggle documentation popup (corfu-popupinfo) |
 | =C-M-i= | Manually trigger completion-at-point         |
-
 
 ** clojure-lsp [DISABLED]
 
@@ -136,6 +136,7 @@
       MISSING-DEPENDENCY error at connect time.
 
 
+
 * org-present
   TBA
 
@@ -165,7 +166,6 @@
 | =M-d=   | Toggle documentation popup (corfu-popupinfo) |
 | =C-M-i= | Manually trigger completion-at-point         |
 
-
 *** Supplementary: Hippie-expand (manual expansion)
 
     Triggered manually with ~M-/~. Cycles through various expansion
@@ -183,11 +183,13 @@
 
 | Key       | Description                                  |
 |-----------+----------------------------------------------|
-| ~C-x u~   | Undo tree                                    |
 | ~C-k~     | Kill to end of form (structurally safe)      |
 | ~M-k~     | Kill whole form                              |
 | ~C-M-k~   | Kill forward expression                      |
 | ~C-x C-f~ | Open a file. Starts in the current directory |
+| ~C-_~     | Undo                                         |
+| ~C-M-_~   | Redo                                         |
+| ~C-x u~   | Undo tree - vundo tree-view                  |
 
 ** Paredit
 
