@@ -47,18 +47,6 @@
 (set-selection-coding-system 'utf-8) ; please
 (prefer-coding-system 'utf-8) ; with sugar on top
 
-;;; ----------------------------------------------------------------------------
-;;;
-;;;   Undo mode
-;;;
-;;;     Represent undo-history as an actual tree (visualize with C-x u)
-;;;
-(setq undo-tree-mode-lighter "")
-
-(require 'undo-tree)
-(global-undo-tree-mode 1)
-(setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))
-
 
 ;;; ----------------------------------------------------------------------------
 ;;;
