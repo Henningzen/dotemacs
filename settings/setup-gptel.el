@@ -364,10 +364,16 @@ Safety and sources:
 (setq gptel-claude-opus (gptel-make-anthropic "Claude Opus"
                           :stream t
                           :key (my/get-secret "api.anthropic.ai" "apikey")
-                          :models '(claude-opus-4-8)))
+                          :models '(claude-opus-5)))
 
-(setq gptel-backend gptel-mistral
-      gptel-model 'mistral-medium-3-5)
+(setq gptel-gemini (gptel-make-gemini "Gemini"
+                     :key (my/get-secret "api.google.com" "apikey")
+                     :stream t
+                     :models '(gemini-3.1-pro-preview
+                               gemini-3.6-flash)))
+
+(setq gptel-backend gptel-gemini
+      gptel-model 'gemini-3.1-pro-preview)
 
 ;; --- Backend alist (for interactive selection) ---------------------------
 
@@ -375,6 +381,8 @@ Safety and sources:
   `(("mistral-medium" . (,gptel-mistral     . mistral-medium-3-5))
     ("codestral"      . (,gptel-mistral     . codestral-2508))
     ("devstral"       . (,gptel-mistral     . mistral-medium-3-5))
+    ("gemini"         . (,gptel-gemini      . gemini-3.1-pro-preview))
+    ("gemini-flash"   . (,gptel-gemini      . gemini-3.6-flash))
     ("claude-opus"    . (,gptel-claude-opus . claude-opus-5)))
   "Alist mapping names to (backend . model) pairs.")
 
@@ -396,26 +404,26 @@ Safety and sources:
 
 (defvar gptel-profile-alist
   `(("architect"     . (:directives ,gptel-directive-architect
-				    :backend    ,gptel-mistral
-				    :model      mistral-medium-3-5))
+				    :backend    ,gptel-gemini
+				    :model      gemini-3.1-pro-preview))
     ("sweng"         . (:directives ,gptel-directive-sweng
-				    :backend    ,gptel-mistral
-				    :model      mistral-medium-3-5))
+				    :backend    ,gptel-gemini
+				    :model      gemini-3.1-pro-preview))
     ("clojure"       . (:directives ,gptel-directive-clojure
-				    :backend    ,gptel-mistral
-				    :model      mistral-medium-3-5))
+				    :backend    ,gptel-gemini
+				    :model      gemini-3.1-pro-preview))
     ("python"        . (:directives ,gptel-directive-python
-				    :backend    ,gptel-mistral
-				    :model      mistral-medium-3-5))
+				    :backend    ,gptel-gemini
+				    :model      gemini-3.1-pro-preview))
     ("elisp"         . (:directives ,gptel-directive-elisp
-				    :backend    ,gptel-mistral
-				    :model      mistral-medium-3-5))
+				    :backend    ,gptel-claude-opus
+				    :model      claude-opus-5))
     ("common-lisp"   . (:directives ,gptel-directive-commonlisp
 				    :backend    ,gptel-claude-opus
 				    :model      claude-opus-5))
     ("writing-buddy" . (:directives ,gptel-directive-writing-buddy
-				    :backend    ,gptel-mistral
-				    :model      mistral-medium-3-5)))
+				    :backend    ,gptel-claude-opus
+				    :model      claude-opus-5)))
   "Alist mapping profile names to (directives backend model).")
 
 (defun gptel-switch-profile (profile-name)
