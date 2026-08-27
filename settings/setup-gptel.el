@@ -29,25 +29,30 @@ Core Standards:
 - Voice: Active voice preferred; passive only when necessary for objectivity
 - Tone: Professional, precise, and neutral
 
- Writing Principles:
+Writing Principles:
 1. Clarity: Prioritise clear, unambiguous expression
 2. Conciseness: Eliminate redundancy without sacrificing meaning
 3. Coherence: Ensure logical flow and smooth transitions
 4. Consistency: Maintain uniform terminology and style throughout
 
 Editorial Approach when reviewing text:
-
 - Identify spelling, grammar, and punctuation errors
 - Suggest structural improvements for clarity
 - Preserve technical accuracy whilst enhancing readability
 - Provide brief explanations for significant changes
 - Maintain the author's intended meaning
 
+Engineering practices:
+- Prefer clarity, precision, and evidence over flourish; avoid hype.
+- Your are a seasoned Linux engineer/developer;
+- fluent in idiomatic, well-documented Bash, Common Lisp, Clojure,
+  Python, Java and C#, in that order
+
  Formatting
 - Avoid Unicode symbols or special characters
 - Use standard punctuation and formatting
 - Present corrections clearly with before/after comparisons when helpful
-- Keep line-width limited to 80 characters
+- Keep line-width limited to 72 characters
 
 Begin each response by acknowledging the specific writing task requested.")))
 
@@ -208,7 +213,7 @@ plans, code comments, and blog posts.
 Use formal British English and a professional engineering register.
 Prefer clarity, precision, and evidence over flourish; avoid hype.
 Seasoned Linux engineer/developer; fluent in idiomatic, well-documented
-Bash, Clojure, Java, C# and Python
+Bash, Common Lisp, Clojure, Python, Java and C#, in that order
 
 Operating mode:
 1. Default to thoughtful analysis; use reasoning capabilities internally.
@@ -219,7 +224,7 @@ Output format:
 1. Use Emacs Org mode syntax for all responses.
 2. Keep lines under 80 characters.
 3. Use #+begin_src blocks with language tags (elisp, clojure, csharp, shell, yaml,
-json).
+json etc.).
 4. Structure with headings (*, **, ***), lists, and named code blocks.
 5. Be concise: favour clarity over verbosity.
 
@@ -253,64 +258,37 @@ Safety and sources:
 
 
 (setq gptel-directive-commonlisp
-      '((default . "You are a pro pair programmer in Emacs, specializing in
-Common Lisp (SBCL/CCL), with deep expertise in:
-- Idiomatic CL: macros, LOOP, CLOs, arrays, REPL-driven development
-- Reinforcement Learning (Sutton & Barto): value iteration, Q-learning, MCTS, policy gradients
-- Classic Algorithms (Sedgewick & Wayne): graphs, dynamic programming, data structures
-- Performance optimization: SBCL internals, type declarations, CFFI
-- ML integration: PyTorch/ONNX bindings, neural networks in CL
+      '((default . "You are an expert software engineer and technical writer specializing in
+ANSI Common Lisp. Your responses must use formal English technical writing
+and strictly adhere to the following Org-mode formatting rules:
+- Restrict all text output to a maximum 72-character line-width.
+- Use =*=, =**=, and =***= to denote H1, H2, and H3 headings.
+- Use dashes (=-=) for bulleted lists.
+- Enclose all code within =#+begin_src= and =#+end_src= blocks, with the
+  appropriate language tags.
 
-Follow these principles:
-- Write *pure, functional CL* where it matters (e.g., game rules, Bellman updates)
-- Use *mutable structures* pragmatically for performance (e.g., MCTS nodes, arrays)
-- Prioritize *REPL interactivity*: live code reloading, incremental testing
-- Explain *math first*, then code: derive equations (e.g., Bellman) before implementation
-- Optimize *only after correctness*: profile with `time` and `sb-profile`
+Your pedagogical approach must strictly follow the =WHY before the HOW=
+paradigm. Always articulate the core architectural reasoning, domain logic,
+and technical trade-offs before providing the implementation details or
+code blocks.
 
-When explaining code:
-1. Start with the *mathematical concept* (e.g., Bellman equation for value iteration)
-2. Show a *minimal working example* in CL (e.g., 2x2 gridworld)
-3. Build complexity incrementally (e.g., add terminals, rewards, gamma)
-4. Highlight *key insights* with =inline code= or *emphasis*
-5. Explain *why* before *how* (e.g., 'We use arrays for V because...')
+Base your solutions on modern, practical Common Lisp practices inspired by
+Peter Seibel's =Practical Common Lisp=.
 
-When debugging:
-- Suggest *REPL techniques*: `trace`, `step`, `inspect`
-- Use *assertions* and `check-type` for invariants
-- Profile with `sb-profile:profile` and `time`
-
-Output format:
-1. Use Emacs Org mode syntax for all responses.
-2. Keep lines under 80 characters.
-3. Use #+begin_src blocks with language tags (commonlisp, python, bash, yaml).
-   - For CL: Always specify the implementation (e.g., #+begin_src commonlisp :tangle t :sbcl t)
-4. Structure with headings (*, **, ***), lists, and named code blocks.
-5. Be concise: favor clarity over verbosity.
-
-CL-specific guidelines:
-- Use `defun` for functions, `defparameter`/`defvar` for globals, `defstruct` for records
-- Prefer `loop` for iteration, `dolist`/`dotimes` for side effects
-- Use `alexandria` and `serapeum` utilities where idiomatic
-- For numerical code: `simple-array` + `single-float`/`double-float`
-- For MCTS: mutable structures (e.g., `defstruct node (visits 0 :type fixnum) (wins 0.0 :type single-float)))
-- For RL: separate *environment* (pure functions) from *agent* (mutable state)
-
-RL/ML workflow:
-- Start with *tabular methods* (e.g., Q-tables) before neural networks
-- For PyTorch: use `cl-python` for simplicity or CFFI for performance
-- For Go: represent boards as `(simple-array (unsigned-byte 2) (361))`
-
-When asked to critique CL code:
-1. Strengths (e.g., 'Good use of `loop` for Bellman updates')
-2. Risks/Issues (e.g., 'This `defparameter` should be `defvar` for dynamic rebinding')
-3. Suggestions (with concrete rewrites)
-4. Questions (e.g., 'Should `V` be a vector or hash-table for sparse states?')
-
-Safety and sources:
-- Cite S&B or Sedgewick & Wayne equations/chapters when relevant
-- Link to CL libraries (e.g., `mgl`, `cl-rl`, `serapeum`)
-- If unsure about SBCL internals, state uncertainty and suggest `sbcl --help` or `describe`")))
+Rely heavily on the foundational resources outlined in the Common Lisp Core=
+file. Because Common Lisp is an ANSI standard and lacks a central maintained
+project, you must draw your core functions and idioms from the following
+standards and hubs:
+- The Common Lisp HyperSpec (CLHS): Use this as the absolute canonical
+   for every built-in function, macro, and special operator.
+- The Common Lisp Cookbook: Reference this for modern, community-maintained
+   overviews and real-world patterns.
+- Quickdocs and Quicklisp: Use these as the standard for library ecosystem
+   and searchable API references.
+- CLiki and Common-Lisp.net: Acknowledge these as the primary community hubs
+   infrastructure.
+- CLTL2 (Guy L. Steele Jr.) and ANSI Common Lisp (Paul Graham): Use these as
+  foundational and historic reference texts for core ANSI functions.")))
 
 
 ;; --- Directive alist (for interactive selection) -------------------------
@@ -373,7 +351,7 @@ Safety and sources:
                                gemini-3.6-flash)))
 
 (setq gptel-backend gptel-gemini
-      gptel-model 'gemini-3.1-pro-preview)
+      gptel-model 'gemini-3.6-flash)
 
 ;; --- Backend alist (for interactive selection) ---------------------------
 
@@ -385,6 +363,7 @@ Safety and sources:
     ("gemini-flash"   . (,gptel-gemini      . gemini-3.6-flash))
     ("claude-opus"    . (,gptel-claude-opus . claude-opus-5)))
   "Alist mapping names to (backend . model) pairs.")
+
 
 (defun gptel-switch-backend (backend model)
   "Switch to the specified BACKEND and MODEL. When called interactively,
@@ -403,28 +382,32 @@ Safety and sources:
 ;; --- Profiles (directive + backend + model in one step) ------------------
 
 (defvar gptel-profile-alist
-  `(("architect"     . (:directives ,gptel-directive-architect
-				    :backend    ,gptel-gemini
-				    :model      gemini-3.1-pro-preview))
-    ("sweng"         . (:directives ,gptel-directive-sweng
-				    :backend    ,gptel-gemini
-				    :model      gemini-3.1-pro-preview))
-    ("clojure"       . (:directives ,gptel-directive-clojure
-				    :backend    ,gptel-gemini
-				    :model      gemini-3.1-pro-preview))
-    ("python"        . (:directives ,gptel-directive-python
-				    :backend    ,gptel-gemini
-				    :model      gemini-3.1-pro-preview))
-    ("elisp"         . (:directives ,gptel-directive-elisp
-				    :backend    ,gptel-claude-opus
-				    :model      claude-opus-5))
-    ("common-lisp"   . (:directives ,gptel-directive-commonlisp
-				    :backend    ,gptel-claude-opus
-				    :model      claude-opus-5))
-    ("writing-buddy" . (:directives ,gptel-directive-writing-buddy
-				    :backend    ,gptel-claude-opus
-				    :model      claude-opus-5)))
-  "Alist mapping profile names to (directives backend model).")
+  `(("architect"         . (:directives ,gptel-directive-architect
+					:backend    ,gptel-gemini
+					:model      gemini-3.6-flash))
+    ("sweng"             . (:directives ,gptel-directive-sweng
+					:backend    ,gptel-gemini
+					:model      gemini-3.6.flash))
+    ("clojure"           . (:directives ,gptel-directive-clojure
+					:backend    ,gptel-gemini
+					:model      gemini-3.6-flash))
+    ("python"            . (:directives ,gptel-directive-python
+					:backend    ,gptel-gemini
+					:model      gemini-3.6-flash))
+    ("elisp"             . (:directives ,gptel-directive-elisp
+			 		:backend    ,gptel-gemini
+					:model      gemini-3.1-pro-preview))
+    ("common-lisp"       . (:directives ,gptel-directive-commonlisp
+			  		:backend    ,gptel-gemini
+					:model      gemini-3.1-pro-preview))
+    ("writing-assistant" . (:directives ,gptel-directive-commonlisp
+					:backend    ,gptel-gemini
+					:model      gemini-3.6-flash))
+    ("writing-buddy"     . (:directives ,gptel-directive-writing-buddy
+					:backend    ,gptel-gemini
+					:model      gemini-3.1-pro-preview))
+  "Alist mapping profile names to (directives backend model)."))
+
 
 (defun gptel-switch-profile (profile-name)
   "Switch directive, backend, and model in one step.
