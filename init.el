@@ -113,7 +113,7 @@
 ;;;
 ;;;
 ;; Setup extensions
-;;(eval-after-load 'org '(require 'setup-org))
+(eval-after-load 'org '(require 'setup-org))
 (eval-after-load 'magit '(require 'setup-magit))
 
 (require 'setup-undo)
