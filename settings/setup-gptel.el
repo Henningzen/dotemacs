@@ -339,19 +339,36 @@ standards and hubs:
                       :models '(mistral-medium-3-5
                                 codestral-2508)))
 
-(setq gptel-claude-opus (gptel-make-anthropic "Claude Opus"
-                          :stream t
-                          :key (my/get-secret "api.anthropic.ai" "apikey")
-                          :models '(claude-opus-5)))
-
 (setq gptel-gemini (gptel-make-gemini "Gemini"
                      :key (my/get-secret "api.google.com" "apikey")
                      :stream t
                      :models '(gemini-3.1-pro-preview
                                gemini-3.6-flash)))
 
-(setq gptel-backend gptel-gemini
-      gptel-model 'gemini-3.6-flash)
+(setq gptel-anthropic (gptel-make-anthropic "Anthropic"
+			:stream t
+			:key (my/get-secret "api.anthropic.ai" "apikey")
+			:models '(claude-opus-5
+				  claude-sonnet-5
+				  claude-haiku-4-5-20251001)))
+
+;; --- Prompt caching (Anthropic only) ------------------------------------
+;; Cache tool definitions, the system directive and the conversation so
+;; far.  Later turns re-read the cached prefix (~10% of input price)
+;; instead of re-processing it.  Ignored by non-Anthropic backends.
+;;
+;; Characteristics:
+;;   - Minimum cacheable prefix ~1024 tokens (Sonnet/Opus),
+;;     ~2048 (Haiku); shorter prefixes are silently not cached.
+;;   - Cache TTL ~5 minutes, refreshed on each hit.
+;;   - Cache writes cost ~1.25x, so this pays off in long sessions,
+;;     not in one-off queries.
+(setq gptel-cache '(system tool message))
+
+
+(setq gptel-backend gptel-anthropic
+      gptel-model 'claude-sonnet-5)
+
 
 ;; --- Backend alist (for interactive selection) ---------------------------
 
@@ -361,7 +378,9 @@ standards and hubs:
     ("devstral"       . (,gptel-mistral     . mistral-medium-3-5))
     ("gemini"         . (,gptel-gemini      . gemini-3.1-pro-preview))
     ("gemini-flash"   . (,gptel-gemini      . gemini-3.6-flash))
-    ("claude-opus"    . (,gptel-claude-opus . claude-opus-5)))
+    ("claude-opus"    . (,gptel-anthropic   . claude-opus-5))
+    ("claude-sonnet"  . (,gptel-anthropic   . claude-sonnet-5))
+    ("claude-haiku"   . (,gptel-anthropic   . claude-haiku-4-5-20251001)))
   "Alist mapping names to (backend . model) pairs.")
 
 
@@ -383,29 +402,29 @@ standards and hubs:
 
 (defvar gptel-profile-alist
   `(("architect"         . (:directives ,gptel-directive-architect
-					:backend    ,gptel-gemini
-					:model      gemini-3.6-flash))
+					:backend    ,gptel-anthropic
+					:model      claude-opus-5))
     ("sweng"             . (:directives ,gptel-directive-sweng
-					:backend    ,gptel-gemini
-					:model      gemini-3.6.flash))
+					:backend    ,gptel-anthropic
+					:model      claude-sonnet-5))
     ("clojure"           . (:directives ,gptel-directive-clojure
-					:backend    ,gptel-gemini
-					:model      gemini-3.6-flash))
+					:backend    ,gptel-anthropic
+					:model      claude-sonnet-5))
     ("python"            . (:directives ,gptel-directive-python
-					:backend    ,gptel-gemini
-					:model      gemini-3.6-flash))
+					:backend    ,gptel-anthropic
+					:model      claude-sonnet-5))
     ("elisp"             . (:directives ,gptel-directive-elisp
-			 		:backend    ,gptel-gemini
-					:model      gemini-3.1-pro-preview))
+					:backend    ,gptel-anthropic
+					:model      claude-opus-5))
     ("common-lisp"       . (:directives ,gptel-directive-commonlisp
-			  		:backend    ,gptel-gemini
-					:model      gemini-3.1-pro-preview))
-    ("writing-assistant" . (:directives ,gptel-directive-commonlisp
-					:backend    ,gptel-gemini
-					:model      gemini-3.6-flash))
+					:backend    ,gptel-anthropic
+					:model      claude-opus-5))
+    ("writing-assistant" . (:directives ,gptel-directive-english-writing
+					:backend    ,gptel-anthropic
+					:model      claude-sonnet-5))
     ("writing-buddy"     . (:directives ,gptel-directive-writing-buddy
-					:backend    ,gptel-gemini
-					:model      gemini-3.1-pro-preview))
+					:backend    ,gptel-anthropic
+					:model      claude-opus-5))
   "Alist mapping profile names to (directives backend model)."))
 
 
