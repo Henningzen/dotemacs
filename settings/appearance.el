@@ -37,7 +37,7 @@
 
 ;; Font for now, Emacs 29++/Ubuntu (used temporarily)
 (set-frame-font "DejaVu Sans Mono")
-(set-face-attribute 'default nil :height 120) ;; TODO make jansenh/**-font
+(set-face-attribute 'default nil :height 110) ;; TODO make jansenh/**-font
 
 ;; --- Miscellaneous settings --------------------------------------------------
 ;;
