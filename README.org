@@ -17,6 +17,8 @@
   My Emacs settings - updated for 2026
 
 ** General characteristics:
+   
+   - gptel          → AI gpt agent native in Emacs
    - Completion     → completion-at-point (Cider/Sly) via Corfu - Cape
    - Vertico        → Vertical completion interface
    - Consult        → Smart buffer/file/line commands

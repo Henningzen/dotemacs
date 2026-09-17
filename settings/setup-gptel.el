@@ -275,7 +275,7 @@ code blocks.
 Base your solutions on modern, practical Common Lisp practices inspired by
 Peter Seibel's =Practical Common Lisp=.
 
-Rely heavily on the foundational resources outlined in the Common Lisp Core=
+Rely heavily on the foundational resources outlined in the Common Lisp Core
 file. Because Common Lisp is an ANSI standard and lacks a central maintained
 project, you must draw your core functions and idioms from the following
 standards and hubs:
@@ -366,9 +366,12 @@ standards and hubs:
 (setq gptel-cache '(system tool message))
 
 
-(setq gptel-backend gptel-anthropic
-      gptel-model 'claude-sonnet-5)
+;; (setq gptel-backend gptel-anthropic
+;;       gptel-model 'claude-sonnet-5)
 
+
+(setq gptel-backend gptel-mistral
+      gptel-model 'mistral-medium-3-5)
 
 ;; --- Backend alist (for interactive selection) ---------------------------
 
@@ -402,29 +405,29 @@ standards and hubs:
 
 (defvar gptel-profile-alist
   `(("architect"         . (:directives ,gptel-directive-architect
-					:backend    ,gptel-anthropic
-					:model      claude-opus-5))
+					:backend    ,gptel-mistral
+					:model      mistral-medium-3-5))
     ("sweng"             . (:directives ,gptel-directive-sweng
-					:backend    ,gptel-anthropic
-					:model      claude-sonnet-5))
+					:backend    ,gptel-mistral
+					:model      mistral-medium-3-5))
     ("clojure"           . (:directives ,gptel-directive-clojure
-					:backend    ,gptel-anthropic
-					:model      claude-sonnet-5))
+					:backend    ,gptel-mistral
+					:model      mistral-medium-3-5))
     ("python"            . (:directives ,gptel-directive-python
-					:backend    ,gptel-anthropic
-					:model      claude-sonnet-5))
+					:backend    ,gptel-mistral
+					:model      mistral-medium-3-5))
     ("elisp"             . (:directives ,gptel-directive-elisp
-					:backend    ,gptel-anthropic
-					:model      claude-opus-5))
+					:backend    ,gptel-mistral
+					:model      mistral-medium-3-5))
     ("common-lisp"       . (:directives ,gptel-directive-commonlisp
-					:backend    ,gptel-anthropic
-					:model      claude-opus-5))
-    ("writing-assistant" . (:directives ,gptel-directive-english-writing
-					:backend    ,gptel-anthropic
-					:model      claude-sonnet-5))
+					:backend    ,gptel-mistral
+					:model      mistral-medium-3-5))
+    ("writing-assistant" . (:directives ,gptel-directive-commonlisp
+					:backend    ,gptel-mistral
+					:model      mistral-medium-3-5))
     ("writing-buddy"     . (:directives ,gptel-directive-writing-buddy
-					:backend    ,gptel-anthropic
-					:model      claude-opus-5))
+					:backend    ,gptel-mistral
+					:model      mistral-medium-3-5))
   "Alist mapping profile names to (directives backend model)."))
 
 
