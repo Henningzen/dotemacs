@@ -6,30 +6,39 @@
 ;;; Code:
 
 (require 'package)
-(require 'dash)
-
-(setq package-pinned-packages '())
 
 (setq package-archives
-      '(("gnu"          . "https://elpa.gnu.org/packages/")      ; always good
-        ("melpa"        . "https://melpa.org/packages/")         ; rolling / dev
-        ("melpa-stable" . "https://stable.melpa.org/packages/"))) ; conservative default
+      '(("gnu"          . "https://elpa.gnu.org/packages/")
+        ("nongnu"       . "https://elpa.nongnu.org/nongnu/")
+        ("melpa-stable" . "https://stable.melpa.org/packages/")
+        ("melpa"        . "https://melpa.org/packages/")))
 
-;; Everything keeps coming from melpa-stable, EXCEPT:
-;; -  gptel
-;;
-(setq package-pinned-packages
-      '((gptel . "melpa")))
+(setq package-archive-priorities
+      '(("melpa-stable" . 10)
+        ("nongnu"       .  7)
+        ("gnu"          .  5)
+        ("melpa"        .  0)))
 
-(package-initialize)
+(setq package-pinned-packages '((gptel . "melpa")))
 
-(unless (file-exists-p "/home/jansenh/.emacs.d/elpa/archives/melpa")
+;;; Let's be lazy and defer the package loading to after
+;;; the package setup, init.el
+;
+;(package-initialize) 
+
+(defconst hj/package-archive-stamp
+  (expand-file-name "elpa/archives/melpa/archive-contents"
+                    user-emacs-directory)
+  "Marker file proving the MELPA index has been downloaded.")
+
+(unless (file-exists-p hj/package-archive-stamp)
   (package-refresh-contents))
 
 (defun packages-install (packages)
-  (--each packages
-    (when (not (package-installed-p it))
-      (package-install it)))
+  "Install each package in PACKAGES unless already installed."
+  (dolist (pkg packages)
+    (unless (package-installed-p pkg)
+      (package-install pkg)))
   (delete-other-windows))
 
 ;;; On-demand installation of packages

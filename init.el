@@ -51,24 +51,25 @@
 ;;;
 (require 'setup-package)
 
+
 (defun init--install-packages ()
   (packages-install
    '(
-     apheleia              ;; Format-on-save (Python: ruff format + import sort)
+     apheleia ;; Format-on-save (Python: ruff format + import sort)
      browse-kill-ring
-     cape                  ;; extra completion backends, ref corfu
+     cape ;; extra completion backends, ref corfu
      cider
      clojure-mode
-     code-cells            ;; Open .ipynb as plain buffers (needs jupytext)
+     code-cells	;; Open .ipynb as plain buffers (needs jupytext)
      corfu
      consult
-     dape                  ;; Debug Adapter Protocol client (Python: debugpy)
+     dape ;; Debug Adapter Protocol client (Python: debugpy)
      dash
      diff-hl
      diminish
-     docker                ;; Manage images/containers from Emacs
+     docker ;; Manage images/containers from Emacs
      dockerfile-mode
-     envrc                 ;; Per-project direnv envs (Python: uv .venv activation)
+     envrc ;; Per-project direnv envs (Python: uv .venv activation)
      find-file-in-project
      gptel
      forge
@@ -76,32 +77,34 @@
      marginalia
      markdown-mode
      mermaid-mode
-     ob-mermaid            ;; Org-mode support for Mermaid
+     ob-mermaid	;; Org-mode support for Mermaid
      lsp-mode
-     lsp-pyright           ;; Python LSP client (basedpyright)
+     lsp-pyright ;; Python LSP client (basedpyright)
      lsp-ui
      orderless
      org-present
      ox-reveal
      paredit
      perspective
-     python-pytest          ;; Transient pytest runner
-     sly                    ;; All things Sly
-     sly-quicklisp          ;; Quicklisp Sly integration (browse/load systems)
-     sly-asdf                ;; ASDF Sly system support
+     python-pytest ;; Transient pytest runner
+     sly	   ;; All things Sly
+     sly-quicklisp ;; Quicklisp Sly integration (browse/load systems)
+     sly-asdf	   ;; ASDF Sly system support
      undo-fu-session
      vundo
      vertico
-     visual-fill-column
-     )))
+     visual-fill-column)))
 
-(condition-case nil
-    (init--install-packages)
+
+(condition-case nil (init--install-packages)
   (error
    (package-refresh-contents)
    (init--install-packages)))
 
-;; Local functions (load all files in defuns-dir)
+
+;;; ----------------------------------------------------------------------------
+;;; Local functions (load all files in defuns-dir)
+;;;
 (setq defuns-dir (expand-file-name "defuns" user-emacs-directory))
 (dolist (file (directory-files defuns-dir t "\\w+"))
   (when (file-regular-p file)
@@ -132,6 +135,7 @@
 (require 'setup-gptel)
 (require 'setup-mermaid)
 (require 'setup-python)
+(require 'setup-csharp)
 ;;(require 'mode-mappings) ;; TODO
 
 (provide 'init)

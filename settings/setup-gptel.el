@@ -365,7 +365,6 @@ standards and hubs:
 ;;     not in one-off queries.
 (setq gptel-cache '(system tool message))
 
-
 ;; (setq gptel-backend gptel-anthropic
 ;;       gptel-model 'claude-sonnet-5)
 
@@ -378,6 +377,7 @@ standards and hubs:
 (defvar gptel-backend-alist
   `(("mistral-medium" . (,gptel-mistral     . mistral-medium-3-5))
     ("codestral"      . (,gptel-mistral     . codestral-2508))
+    ("mistral-large"  . (,gptel-mistral     . mistral-large-4))
     ("devstral"       . (,gptel-mistral     . mistral-medium-3-5))
     ("gemini"         . (,gptel-gemini      . gemini-3.1-pro-preview))
     ("gemini-flash"   . (,gptel-gemini      . gemini-3.6-flash))
@@ -391,8 +391,7 @@ standards and hubs:
   "Switch to the specified BACKEND and MODEL. When called interactively,
    prompt with completing-read."
   (interactive
-   (let* ((choice (completing-read "Backend: "
-                                   gptel-backend-alist nil t))
+   (let* ((choice (completing-read "Backend: " gptel-backend-alist nil t))
           (pair (alist-get choice gptel-backend-alist
                            nil nil #'string=)))
      (list (car pair) (cdr pair))))
@@ -406,7 +405,7 @@ standards and hubs:
 (defvar gptel-profile-alist
   `(("architect"         . (:directives ,gptel-directive-architect
 					:backend    ,gptel-mistral
-					:model      mistral-medium-3-5))
+					:model      mistral-large-4))
     ("sweng"             . (:directives ,gptel-directive-sweng
 					:backend    ,gptel-mistral
 					:model      mistral-medium-3-5))
@@ -422,13 +421,13 @@ standards and hubs:
     ("common-lisp"       . (:directives ,gptel-directive-commonlisp
 					:backend    ,gptel-mistral
 					:model      mistral-medium-3-5))
-    ("writing-assistant" . (:directives ,gptel-directive-commonlisp
+    ("writing-assistant" . (:directives ,gptel-directive-english-writing
 					:backend    ,gptel-mistral
-					:model      mistral-medium-3-5))
+					:model      mistral-large-4))
     ("writing-buddy"     . (:directives ,gptel-directive-writing-buddy
 					:backend    ,gptel-mistral
-					:model      mistral-medium-3-5))
-  "Alist mapping profile names to (directives backend model)."))
+					:model      mistral-large-4))
+    "Alist mapping profile names to (directives backend model)."))
 
 
 (defun gptel-switch-profile (profile-name)

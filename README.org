@@ -2,7 +2,7 @@
 #+AUTHOR: Henning Jansen
 #+EMAIL: henning.jansen@jansenh.no
 #+DATE: 2025-05-24
-#+DESCRIPTION: Personal Emacs configuration settings, updated for 2025
+#+DESCRIPTION: Personal Emacs configuration settings, updated for 2026
 #+KEYWORDS: emacs, configuration
 #+LANGUAGE: en
 #+STARTUP: overview
@@ -36,6 +36,9 @@
 
 ** TODO Elaborate over CAPF-NATIVE stack.
 
+
+* TODO Stuff that needs attention:
+** TODO Fix filepaths [[file:settings/setup-package.el][setup-package.el]] has fully qualified path reference.
 
 * Packages
 
@@ -185,13 +188,6 @@
       root-owned ~/.sbclrc is the usual cause of the slynk-quicklisp
       MISSING-DEPENDENCY error at connect time.
 
-
-
-* org-present
-  TBA
-
-** visual-fill-column
-   TBA
 
 
 * Using Emacs
